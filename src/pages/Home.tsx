@@ -2,7 +2,7 @@ export default function Home() {
   return (
     <main className="page">
       <section className="hero-card">
-        <p className="eyebrow">FOUNDATION BUILD · WEEK 1</p>
+        <p className="eyebrow">FOUNDATION BUILD - WEEK 1 🚀</p>
 
         <h1>FORGE Performance Training</h1>
 
