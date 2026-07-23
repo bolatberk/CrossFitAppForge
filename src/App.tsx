@@ -1030,7 +1030,9 @@ function App() {
           onOpenNextDay={openDay}
         />
       )}
-      {activePage === 'timer' && <Timer />}
+   {activePage === 'timer' && (
+  <Timer onBack={() => changePage('home')} />
+)}
       {activePage === 'pr' && <PRTracking />}
 
       <nav className="bottom-navigation">
