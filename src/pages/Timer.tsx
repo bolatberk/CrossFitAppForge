@@ -1,105 +1,139 @@
-import { useEffect, useRef, useState } from 'react';
+import {
+  useEffect,
+  useRef,
+  useState
+} from 'react';
+import type { CSSProperties } from 'react';
+import './Timer.css';
 
 type TimerMode = 'amrap' | 'emom' | 'fortime';
 
+type TimerPhase =
+  | 'idle'
+  | 'preparing'
+  | 'running'
+  | 'paused'
+  | 'finished';
+
 interface TimerProps {
   onBack: () => void;
-}
-
-interface WakeLockSentinelLike {
-  release: () => Promise<void>;
-  addEventListener?: (
-    type: string,
-    listener: EventListenerOrEventListenerObject
-  ) => void;
-}
-
-interface NavigatorWithWakeLock extends Navigator {
-  wakeLock?: {
-    request: (type: 'screen') => Promise<WakeLockSentinelLike>;
-  };
 }
 
 interface WindowWithWebkitAudio extends Window {
   webkitAudioContext?: typeof AudioContext;
 }
 
-const pad = (value: number) => value.toString().padStart(2, '0');
+interface WakeLockSentinelLike {
+  release: () => Promise<void>;
+}
+
+interface NavigatorWithWakeLock extends Navigator {
+  wakeLock?: {
+    request: (
+      type: 'screen'
+    ) => Promise<WakeLockSentinelLike>;
+  };
+}
+
+const pad = (value: number) =>
+  value.toString().padStart(2, '0');
 
 const formatTime = (totalSeconds: number) => {
-  const safeSeconds = Math.max(0, Math.floor(totalSeconds));
+  const safeSeconds = Math.max(
+    0,
+    Math.floor(totalSeconds)
+  );
+
   const minutes = Math.floor(safeSeconds / 60);
   const seconds = safeSeconds % 60;
 
   return `${pad(minutes)}:${pad(seconds)}`;
 };
 
-export default function Timer({ onBack }: TimerProps) {
-  const [mode, setMode] = useState<TimerMode>('amrap');
+export default function Timer({
+  onBack
+}: TimerProps) {
+  const [mode, setMode] =
+    useState<TimerMode>('amrap');
 
-  // AMRAP
-  const [amrapMinutes, setAmrapMinutes] = useState(12);
+  const [phase, setPhase] =
+    useState<TimerPhase>('idle');
 
-  // ExMOM
-  const [emomIntervalMinutes, setEmomIntervalMinutes] = useState(1);
-  const [emomRounds, setEmomRounds] = useState(10);
+  const [amrapMinutes, setAmrapMinutes] =
+    useState(12);
 
-  // For Time
-  const [timeCapMinutes, setTimeCapMinutes] = useState(15);
+  const [
+    emomIntervalMinutes,
+    setEmomIntervalMinutes
+  ] = useState(1);
 
-  // Preparation
-  const [prepTime, setPrepTime] = useState(10);
-  const [prepRemaining, setPrepRemaining] = useState(10);
-  const [preparing, setPreparing] = useState(false);
+  const [emomRounds, setEmomRounds] =
+    useState(10);
 
-  // Timer state
-  const [remainingSeconds, setRemainingSeconds] = useState(0);
-  const [elapsedSeconds, setElapsedSeconds] = useState(0);
-  const [currentRound, setCurrentRound] = useState(1);
+  const [timeCapMinutes, setTimeCapMinutes] =
+    useState(15);
 
-  const [running, setRunning] = useState(false);
-  const [paused, setPaused] = useState(false);
-  const [finished, setFinished] = useState(false);
+  const [prepTime, setPrepTime] =
+    useState(10);
 
-  // Overlays
-  const [showGoOverlay, setShowGoOverlay] = useState(false);
-  const [roundOverlay, setRoundOverlay] = useState<number | null>(null);
-  const [showTimeOverlay, setShowTimeOverlay] = useState(false);
+  const [prepRemaining, setPrepRemaining] =
+    useState(10);
 
-  const audioContextRef = useRef<AudioContext | null>(null);
-  const wakeLockRef = useRef<WakeLockSentinelLike | null>(null);
+  const [remainingSeconds, setRemainingSeconds] =
+    useState(12 * 60);
 
-  const timerIntervalRef = useRef<number | null>(null);
-  const prepIntervalRef = useRef<number | null>(null);
+  const [elapsedSeconds, setElapsedSeconds] =
+    useState(0);
 
-  const runningRef = useRef(false);
-  const pausedRef = useRef(false);
-  const finishedRef = useRef(false);
+  const [currentRound, setCurrentRound] =
+    useState(1);
 
+  const [showGoOverlay, setShowGoOverlay] =
+    useState(false);
+
+  const [roundOverlay, setRoundOverlay] =
+    useState<number | null>(null);
+
+  const [showTimeOverlay, setShowTimeOverlay] =
+    useState(false);
+
+  const audioContextRef =
+    useRef<AudioContext | null>(null);
+
+  const wakeLockRef =
+    useRef<WakeLockSentinelLike | null>(null);
+
+  const prepIntervalRef =
+    useRef<number | null>(null);
+
+  const timerIntervalRef =
+    useRef<number | null>(null);
+
+  const phaseRef = useRef<TimerPhase>('idle');
   const elapsedRef = useRef(0);
-  const remainingRef = useRef(0);
+  const remainingRef = useRef(12 * 60);
   const currentRoundRef = useRef(1);
 
   const totalDuration =
     mode === 'amrap'
       ? amrapMinutes * 60
       : mode === 'emom'
-        ? emomIntervalMinutes * 60 * emomRounds
+        ? emomIntervalMinutes *
+          60 *
+          emomRounds
         : timeCapMinutes * 60;
 
-  const emomIntervalSeconds = emomIntervalMinutes * 60;
+  const emomIntervalSeconds =
+    emomIntervalMinutes * 60;
+
+  const isLocked =
+    phase === 'preparing' ||
+    phase === 'running' ||
+    phase === 'paused';
 
   useEffect(() => {
-    runningRef.current = running;
-  }, [running]);
-
-  useEffect(() => {
-    pausedRef.current = paused;
-  }, [paused]);
-
-  useEffect(() => {
-    finishedRef.current = finished;
-  }, [finished]);
+    phaseRef.current = phase;
+  }, [phase]);
 
   useEffect(() => {
     elapsedRef.current = elapsedSeconds;
@@ -113,87 +147,144 @@ export default function Timer({ onBack }: TimerProps) {
     currentRoundRef.current = currentRound;
   }, [currentRound]);
 
-  const vibrate = (pattern: number | number[]) => {
+  const clearPrepInterval = () => {
+    if (prepIntervalRef.current !== null) {
+      window.clearInterval(
+        prepIntervalRef.current
+      );
+
+      prepIntervalRef.current = null;
+    }
+  };
+
+  const clearTimerInterval = () => {
+    if (timerIntervalRef.current !== null) {
+      window.clearInterval(
+        timerIntervalRef.current
+      );
+
+      timerIntervalRef.current = null;
+    }
+  };
+
+  const vibrate = (
+    pattern: number | number[]
+  ) => {
     if ('vibrate' in navigator) {
       navigator.vibrate(pattern);
     }
   };
 
-  const getAudioContext = async (): Promise<AudioContext | null> => {
-    const AudioContextClass =
-      window.AudioContext ||
-      (window as WindowWithWebkitAudio).webkitAudioContext;
+  const getAudioContext =
+    async (): Promise<AudioContext | null> => {
+      const AudioContextClass =
+        window.AudioContext ||
+        (
+          window as WindowWithWebkitAudio
+        ).webkitAudioContext;
 
-    if (!AudioContextClass) {
-      return null;
-    }
-
-    if (!audioContextRef.current) {
-      audioContextRef.current = new AudioContextClass();
-    }
-
-    const context = audioContextRef.current;
-
-    if (context.state === 'suspended') {
-      try {
-        await context.resume();
-      } catch (error) {
-        console.error('AudioContext resume failed:', error);
+      if (!AudioContextClass) {
+        return null;
       }
-    }
 
-    return context;
-  };
+      if (!audioContextRef.current) {
+        audioContextRef.current =
+          new AudioContextClass();
+      }
+
+      const context =
+        audioContextRef.current;
+
+      if (context.state === 'suspended') {
+        try {
+          await context.resume();
+        } catch (error) {
+          console.error(
+            'Audio context could not start:',
+            error
+          );
+        }
+      }
+
+      return context;
+    };
 
   const unlockAudio = async () => {
-    const context = await getAudioContext();
+    const context =
+      await getAudioContext();
 
     if (!context) {
       return;
     }
 
-    // iOS ses motorunu kullanıcı dokunuşuyla aktive etmek için
-    // çok kısa, duyulmayacak seviyede bir ses çalıyoruz.
-    const oscillator = context.createOscillator();
-    const gain = context.createGain();
+    const oscillator =
+      context.createOscillator();
 
-    oscillator.frequency.value = 440;
+    const gain =
+      context.createGain();
+
     gain.gain.value = 0.0001;
 
     oscillator.connect(gain);
     gain.connect(context.destination);
 
-    oscillator.start(context.currentTime);
-    oscillator.stop(context.currentTime + 0.03);
+    oscillator.start(
+      context.currentTime
+    );
+
+    oscillator.stop(
+      context.currentTime + 0.03
+    );
   };
 
   const playTone = async (
     frequency: number,
     duration: number,
-    volume: number,
-    type: OscillatorType = 'sine'
+    volume: number
   ) => {
-    const context = await getAudioContext();
+    const context =
+      await getAudioContext();
 
-    if (!context || context.state !== 'running') {
+    if (
+      !context ||
+      context.state !== 'running'
+    ) {
       return;
     }
 
-    const oscillator = context.createOscillator();
-    const gain = context.createGain();
+    const oscillator =
+      context.createOscillator();
 
-    const startTime = context.currentTime;
-    const endTime = startTime + duration;
+    const gain =
+      context.createGain();
 
-    oscillator.type = type;
-    oscillator.frequency.setValueAtTime(frequency, startTime);
+    const startTime =
+      context.currentTime;
 
-    gain.gain.setValueAtTime(0.0001, startTime);
+    const endTime =
+      startTime + duration;
+
+    oscillator.type = 'square';
+
+    oscillator.frequency.setValueAtTime(
+      frequency,
+      startTime
+    );
+
+    gain.gain.setValueAtTime(
+      0.0001,
+      startTime
+    );
+
     gain.gain.exponentialRampToValueAtTime(
       Math.max(volume, 0.001),
       startTime + 0.015
     );
-    gain.gain.exponentialRampToValueAtTime(0.0001, endTime);
+
+    gain.gain.exponentialRampToValueAtTime(
+      0.0001,
+      endTime
+    );
 
     oscillator.connect(gain);
     gain.connect(context.destination);
@@ -202,51 +293,76 @@ export default function Timer({ onBack }: TimerProps) {
     oscillator.stop(endTime + 0.02);
   };
 
-  const playCountdownBeep = async () => {
-    await playTone(900, 0.18, 0.9, 'square');
-    vibrate(90);
+  const playCountdownSound = async () => {
+    await playTone(880, 0.16, 0.7);
+    vibrate(80);
   };
 
   const playGoSound = async () => {
-    await playTone(1200, 0.65, 1, 'square');
-    vibrate([120, 70, 180]);
+    await playTone(1200, 0.6, 0.85);
+    vibrate([120, 60, 180]);
   };
 
   const playRoundSound = async () => {
-    await playTone(1050, 0.22, 0.9, 'square');
+    await playTone(950, 0.16, 0.75);
 
     window.setTimeout(() => {
-      void playTone(1250, 0.28, 1, 'square');
-    }, 220);
+      void playTone(
+        1200,
+        0.24,
+        0.85
+      );
+    }, 170);
 
-    vibrate([100, 60, 100]);
+    vibrate([90, 50, 90]);
   };
 
   const playFinishSound = async () => {
-    await playTone(750, 0.22, 0.9, 'square');
+    await playTone(750, 0.2, 0.75);
 
     window.setTimeout(() => {
-      void playTone(950, 0.22, 0.95, 'square');
-    }, 230);
+      void playTone(
+        950,
+        0.2,
+        0.8
+      );
+    }, 220);
 
     window.setTimeout(() => {
-      void playTone(1200, 0.7, 1, 'square');
-    }, 460);
+      void playTone(
+        1200,
+        0.65,
+        0.9
+      );
+    }, 440);
 
-    vibrate([180, 80, 180, 80, 300]);
+    vibrate([
+      160,
+      70,
+      160,
+      70,
+      250
+    ]);
   };
 
   const requestWakeLock = async () => {
-    const nav = navigator as NavigatorWithWakeLock;
+    const wakeNavigator =
+      navigator as NavigatorWithWakeLock;
 
-    if (!nav.wakeLock) {
+    if (!wakeNavigator.wakeLock) {
       return;
     }
 
     try {
-      wakeLockRef.current = await nav.wakeLock.request('screen');
+      wakeLockRef.current =
+        await wakeNavigator.wakeLock.request(
+          'screen'
+        );
     } catch (error) {
-      console.warn('Wake Lock could not be enabled:', error);
+      console.warn(
+        'Wake lock unavailable:',
+        error
+      );
     }
   };
 
@@ -258,69 +374,57 @@ export default function Timer({ onBack }: TimerProps) {
     try {
       await wakeLockRef.current.release();
     } catch (error) {
-      console.warn('Wake Lock release failed:', error);
-    } finally {
-      wakeLockRef.current = null;
-    }
-  };
-
-  const clearTimerInterval = () => {
-    if (timerIntervalRef.current !== null) {
-      window.clearInterval(timerIntervalRef.current);
-      timerIntervalRef.current = null;
-    }
-  };
-
-  const clearPrepInterval = () => {
-    if (prepIntervalRef.current !== null) {
-      window.clearInterval(prepIntervalRef.current);
-      prepIntervalRef.current = null;
-    }
-  };
-
-  const finishWorkout = () => {
-    if (finishedRef.current) {
-      return;
+      console.warn(
+        'Wake lock release failed:',
+        error
+      );
     }
 
-    clearTimerInterval();
-
-    finishedRef.current = true;
-    runningRef.current = false;
-    pausedRef.current = false;
-
-    setRunning(false);
-    setPaused(false);
-    setFinished(true);
-
-    setShowTimeOverlay(true);
-    void playFinishSound();
-    void releaseWakeLock();
-
-    window.setTimeout(() => {
-      setShowTimeOverlay(false);
-    }, 1800);
+    wakeLockRef.current = null;
   };
 
-  const showRound = (round: number) => {
+  const showRoundOverlay = (
+    round: number
+  ) => {
     setRoundOverlay(round);
     void playRoundSound();
 
     window.setTimeout(() => {
       setRoundOverlay(null);
-    }, 1200);
+    }, 1000);
   };
 
-  const runTimerTick = () => {
+  const finishWorkout = () => {
     if (
-      !runningRef.current ||
-      pausedRef.current ||
-      finishedRef.current
+      phaseRef.current === 'finished'
     ) {
       return;
     }
 
-    const nextElapsed = elapsedRef.current + 1;
+    clearTimerInterval();
+
+    phaseRef.current = 'finished';
+    setPhase('finished');
+
+    setShowTimeOverlay(true);
+
+    void playFinishSound();
+    void releaseWakeLock();
+
+    window.setTimeout(() => {
+      setShowTimeOverlay(false);
+    }, 1600);
+  };
+
+  const timerTick = () => {
+    if (
+      phaseRef.current !== 'running'
+    ) {
+      return;
+    }
+
+    const nextElapsed =
+      elapsedRef.current + 1;
 
     elapsedRef.current = nextElapsed;
     setElapsedSeconds(nextElapsed);
@@ -328,11 +432,15 @@ export default function Timer({ onBack }: TimerProps) {
     if (mode === 'fortime') {
       const nextRemaining = Math.max(
         0,
-        timeCapMinutes * 60 - nextElapsed
+        totalDuration - nextElapsed
       );
 
-      remainingRef.current = nextRemaining;
-      setRemainingSeconds(nextRemaining);
+      remainingRef.current =
+        nextRemaining;
+
+      setRemainingSeconds(
+        nextRemaining
+      );
 
       if (nextRemaining <= 0) {
         finishWorkout();
@@ -341,22 +449,41 @@ export default function Timer({ onBack }: TimerProps) {
       return;
     }
 
-    const nextRemaining = Math.max(0, totalDuration - nextElapsed);
+    const nextRemaining = Math.max(
+      0,
+      totalDuration - nextElapsed
+    );
 
-    remainingRef.current = nextRemaining;
-    setRemainingSeconds(nextRemaining);
+    remainingRef.current =
+      nextRemaining;
+
+    setRemainingSeconds(
+      nextRemaining
+    );
 
     if (mode === 'emom') {
       const calculatedRound =
-        Math.floor(nextElapsed / emomIntervalSeconds) + 1;
+        Math.floor(
+          nextElapsed /
+            emomIntervalSeconds
+        ) + 1;
 
       if (
-        calculatedRound > currentRoundRef.current &&
-        calculatedRound <= emomRounds
+        calculatedRound >
+          currentRoundRef.current &&
+        calculatedRound <=
+          emomRounds
       ) {
-        currentRoundRef.current = calculatedRound;
-        setCurrentRound(calculatedRound);
-        showRound(calculatedRound);
+        currentRoundRef.current =
+          calculatedRound;
+
+        setCurrentRound(
+          calculatedRound
+        );
+
+        showRoundOverlay(
+          calculatedRound
+        );
       }
     }
 
@@ -366,37 +493,39 @@ export default function Timer({ onBack }: TimerProps) {
   };
 
   const beginWorkout = () => {
+    clearPrepInterval();
     clearTimerInterval();
 
     elapsedRef.current = 0;
-    remainingRef.current = totalDuration;
+    remainingRef.current =
+      totalDuration;
+
     currentRoundRef.current = 1;
 
-    runningRef.current = true;
-    pausedRef.current = false;
-    finishedRef.current = false;
-
     setElapsedSeconds(0);
-    setRemainingSeconds(totalDuration);
+    setRemainingSeconds(
+      totalDuration
+    );
+
     setCurrentRound(1);
 
-    setPreparing(false);
-    setRunning(true);
-    setPaused(false);
-    setFinished(false);
+    phaseRef.current = 'running';
+    setPhase('running');
 
     setShowGoOverlay(true);
+
     void playGoSound();
     void requestWakeLock();
 
     window.setTimeout(() => {
       setShowGoOverlay(false);
-    }, 1000);
+    }, 900);
 
-    timerIntervalRef.current = window.setInterval(
-      runTimerTick,
-      1000
-    );
+    timerIntervalRef.current =
+      window.setInterval(
+        timerTick,
+        1000
+      );
   };
 
   const startPreparation = async () => {
@@ -405,46 +534,55 @@ export default function Timer({ onBack }: TimerProps) {
     clearPrepInterval();
     clearTimerInterval();
 
-    const initialPrep = prepTime;
+    let countdown = prepTime;
 
-    setPreparing(true);
-    setRunning(false);
-    setPaused(false);
-    setFinished(false);
+    setPrepRemaining(countdown);
 
-    setPrepRemaining(initialPrep);
+    phaseRef.current = 'preparing';
+    setPhase('preparing');
+
     setShowGoOverlay(false);
     setRoundOverlay(null);
     setShowTimeOverlay(false);
 
-    let currentPrep = initialPrep;
+    prepIntervalRef.current =
+      window.setInterval(() => {
+        countdown -= 1;
 
-    prepIntervalRef.current = window.setInterval(() => {
-      currentPrep -= 1;
-      setPrepRemaining(currentPrep);
+        setPrepRemaining(countdown);
 
-      if (currentPrep <= 3 && currentPrep > 0) {
-        void playCountdownBeep();
-      }
+        if (
+          countdown <= 3 &&
+          countdown > 0
+        ) {
+          void playCountdownSound();
+        }
 
-      if (currentPrep <= 0) {
-        clearPrepInterval();
-        beginWorkout();
-      }
-    }, 1000);
+        if (countdown <= 0) {
+          beginWorkout();
+        }
+      }, 1000);
   };
 
   const togglePause = async () => {
     await unlockAudio();
 
-    const nextPaused = !pausedRef.current;
+    if (
+      phaseRef.current === 'running'
+    ) {
+      phaseRef.current = 'paused';
+      setPhase('paused');
 
-    pausedRef.current = nextPaused;
-    setPaused(nextPaused);
-
-    if (nextPaused) {
       void releaseWakeLock();
-    } else {
+      return;
+    }
+
+    if (
+      phaseRef.current === 'paused'
+    ) {
+      phaseRef.current = 'running';
+      setPhase('running');
+
       void requestWakeLock();
     }
   };
@@ -453,23 +591,22 @@ export default function Timer({ onBack }: TimerProps) {
     clearPrepInterval();
     clearTimerInterval();
 
-    runningRef.current = false;
-    pausedRef.current = false;
-    finishedRef.current = false;
-
+    phaseRef.current = 'idle';
     elapsedRef.current = 0;
-    remainingRef.current = totalDuration;
+    remainingRef.current =
+      totalDuration;
+
     currentRoundRef.current = 1;
 
-    setPreparing(false);
-    setRunning(false);
-    setPaused(false);
-    setFinished(false);
-
-    setPrepRemaining(prepTime);
+    setPhase('idle');
     setElapsedSeconds(0);
-    setRemainingSeconds(totalDuration);
+
+    setRemainingSeconds(
+      totalDuration
+    );
+
     setCurrentRound(1);
+    setPrepRemaining(prepTime);
 
     setShowGoOverlay(false);
     setRoundOverlay(null);
@@ -481,36 +618,61 @@ export default function Timer({ onBack }: TimerProps) {
   const cancelPreparation = () => {
     clearPrepInterval();
 
-    setPreparing(false);
+    phaseRef.current = 'idle';
+    setPhase('idle');
+
     setPrepRemaining(prepTime);
   };
 
-  const changeMode = (newMode: TimerMode) => {
-    resetTimer();
+  const changeMode = (
+    newMode: TimerMode
+  ) => {
+    clearPrepInterval();
+    clearTimerInterval();
+
     setMode(newMode);
+
+    phaseRef.current = 'idle';
+    setPhase('idle');
+
+    setElapsedSeconds(0);
+    setCurrentRound(1);
   };
 
   useEffect(() => {
-    setRemainingSeconds(totalDuration);
-    remainingRef.current = totalDuration;
+    if (phaseRef.current !== 'idle') {
+      return;
+    }
+
+    elapsedRef.current = 0;
+    remainingRef.current =
+      totalDuration;
+
+    setElapsedSeconds(0);
+
+    setRemainingSeconds(
+      totalDuration
+    );
+
+    setCurrentRound(1);
+    currentRoundRef.current = 1;
   }, [
-    mode,
-    amrapMinutes,
-    emomIntervalMinutes,
-    emomRounds,
-    timeCapMinutes
+    totalDuration,
+    mode
   ]);
 
   useEffect(() => {
-    setPrepRemaining(prepTime);
-  }, [prepTime]);
+    if (phase === 'idle') {
+      setPrepRemaining(prepTime);
+    }
+  }, [prepTime, phase]);
 
   useEffect(() => {
     const handleVisibilityChange = () => {
       if (
-        document.visibilityState === 'visible' &&
-        runningRef.current &&
-        !pausedRef.current
+        document.visibilityState ===
+          'visible' &&
+        phaseRef.current === 'running'
       ) {
         void requestWakeLock();
         void getAudioContext();
@@ -534,6 +696,7 @@ export default function Timer({ onBack }: TimerProps) {
     return () => {
       clearPrepInterval();
       clearTimerInterval();
+
       void releaseWakeLock();
 
       if (audioContextRef.current) {
@@ -543,99 +706,162 @@ export default function Timer({ onBack }: TimerProps) {
   }, []);
 
   const displayedSeconds =
-    mode === 'fortime' ? elapsedSeconds : remainingSeconds;
+    mode === 'fortime'
+      ? elapsedSeconds
+      : remainingSeconds;
 
   const progressPercent =
     totalDuration > 0
       ? mode === 'fortime'
-        ? Math.min(100, (elapsedSeconds / totalDuration) * 100)
+        ? Math.min(
+            100,
+            (elapsedSeconds /
+              totalDuration) *
+              100
+          )
         : Math.min(
             100,
-            ((totalDuration - remainingSeconds) / totalDuration) *
+            ((totalDuration -
+              remainingSeconds) /
+              totalDuration) *
               100
           )
       : 0;
 
-  const emomRoundRemaining =
-    mode === 'emom' && running
-      ? emomIntervalSeconds -
-        (elapsedSeconds % emomIntervalSeconds || 0)
-      : emomIntervalSeconds;
+  const ringStyle = {
+    '--timer-progress':
+      `${progressPercent * 3.6}deg`
+  } as CSSProperties;
 
-  const timerLocked = preparing || running || finished;
+  const emomRoundRemaining =
+    emomIntervalSeconds -
+    (elapsedSeconds %
+      emomIntervalSeconds);
+
+  const statusText = (() => {
+    if (phase === 'finished') {
+      return 'FINISHED';
+    }
+
+    if (phase === 'paused') {
+      return 'PAUSED';
+    }
+
+    if (phase === 'running') {
+      if (mode === 'emom') {
+        return `ROUND ${currentRound} / ${emomRounds}`;
+      }
+
+      if (mode === 'fortime') {
+        return 'FOR TIME';
+      }
+
+      return 'AMRAP';
+    }
+
+    return 'READY';
+  })();
 
   return (
-    <main className="timer-page">
-      <header className="timer-header">
+    <div className="forge-timer-page">
+      <header className="forge-timer-header">
         <button
           type="button"
-          className="timer-back-button"
+          className="forge-timer-back"
           onClick={onBack}
-          aria-label="Go back"
+          aria-label="Back"
         >
           ←
         </button>
 
-        <div>
-          <p className="timer-eyebrow">FORGE PERFORMANCE</p>
+        <div className="forge-timer-title">
+          <span>FORGE PERFORMANCE</span>
           <h1>TIMER</h1>
         </div>
       </header>
 
-      <section className="timer-mode-tabs">
+      <div className="forge-timer-tabs">
         <button
           type="button"
-          className={mode === 'amrap' ? 'active' : ''}
-          onClick={() => changeMode('amrap')}
-          disabled={timerLocked}
+          className={
+            mode === 'amrap'
+              ? 'active'
+              : ''
+          }
+          disabled={isLocked}
+          onClick={() =>
+            changeMode('amrap')
+          }
         >
           AMRAP
         </button>
 
         <button
           type="button"
-          className={mode === 'emom' ? 'active' : ''}
-          onClick={() => changeMode('emom')}
-          disabled={timerLocked}
+          className={
+            mode === 'emom'
+              ? 'active'
+              : ''
+          }
+          disabled={isLocked}
+          onClick={() =>
+            changeMode('emom')
+          }
         >
           ExMOM
         </button>
 
         <button
           type="button"
-          className={mode === 'fortime' ? 'active' : ''}
-          onClick={() => changeMode('fortime')}
-          disabled={timerLocked}
+          className={
+            mode === 'fortime'
+              ? 'active'
+              : ''
+          }
+          disabled={isLocked}
+          onClick={() =>
+            changeMode('fortime')
+          }
         >
           FOR TIME
         </button>
-      </section>
+      </div>
 
-      {!timerLocked && (
-        <section className="timer-settings">
+      {phase === 'idle' && (
+        <section className="forge-timer-settings">
           {mode === 'amrap' && (
-            <div className="timer-setting-card">
-              <span>AMRAP DURATION</span>
+            <div className="forge-timer-card">
+              <span className="forge-timer-card-label">
+                AMRAP DURATION
+              </span>
 
-              <div className="timer-stepper">
+              <div className="forge-timer-stepper">
                 <button
                   type="button"
                   onClick={() =>
-                    setAmrapMinutes((value) =>
-                      Math.max(1, value - 1)
+                    setAmrapMinutes(
+                      Math.max(
+                        1,
+                        amrapMinutes - 1
+                      )
                     )
                   }
                 >
                   −
                 </button>
 
-                <strong>{amrapMinutes} MIN</strong>
+                <strong>
+                  {amrapMinutes} MIN
+                </strong>
 
                 <button
                   type="button"
                   onClick={() =>
-                    setAmrapMinutes((value) =>
-                      Math.min(99, value + 1)
+                    setAmrapMinutes(
+                      Math.min(
+                        99,
+                        amrapMinutes + 1
+                      )
                     )
                   }
                 >
@@ -647,15 +873,21 @@ export default function Timer({ onBack }: TimerProps) {
 
           {mode === 'emom' && (
             <>
-              <div className="timer-setting-card">
-                <span>INTERVAL</span>
+              <div className="forge-timer-card">
+                <span className="forge-timer-card-label">
+                  INTERVAL
+                </span>
 
-                <div className="timer-stepper">
+                <div className="forge-timer-stepper">
                   <button
                     type="button"
                     onClick={() =>
-                      setEmomIntervalMinutes((value) =>
-                        Math.max(1, value - 1)
+                      setEmomIntervalMinutes(
+                        Math.max(
+                          1,
+                          emomIntervalMinutes -
+                            1
+                        )
                       )
                     }
                   >
@@ -663,14 +895,22 @@ export default function Timer({ onBack }: TimerProps) {
                   </button>
 
                   <strong>
-                    E{emomIntervalMinutes}MOM
+                    E
+                    {
+                      emomIntervalMinutes
+                    }
+                    MOM
                   </strong>
 
                   <button
                     type="button"
                     onClick={() =>
-                      setEmomIntervalMinutes((value) =>
-                        Math.min(10, value + 1)
+                      setEmomIntervalMinutes(
+                        Math.min(
+                          10,
+                          emomIntervalMinutes +
+                            1
+                        )
                       )
                     }
                   >
@@ -679,28 +919,38 @@ export default function Timer({ onBack }: TimerProps) {
                 </div>
               </div>
 
-              <div className="timer-setting-card">
-                <span>TOTAL ROUNDS</span>
+              <div className="forge-timer-card">
+                <span className="forge-timer-card-label">
+                  TOTAL ROUNDS
+                </span>
 
-                <div className="timer-stepper">
+                <div className="forge-timer-stepper">
                   <button
                     type="button"
                     onClick={() =>
-                      setEmomRounds((value) =>
-                        Math.max(1, value - 1)
+                      setEmomRounds(
+                        Math.max(
+                          1,
+                          emomRounds - 1
+                        )
                       )
                     }
                   >
                     −
                   </button>
 
-                  <strong>{emomRounds} ROUNDS</strong>
+                  <strong>
+                    {emomRounds} ROUNDS
+                  </strong>
 
                   <button
                     type="button"
                     onClick={() =>
-                      setEmomRounds((value) =>
-                        Math.min(99, value + 1)
+                      setEmomRounds(
+                        Math.min(
+                          99,
+                          emomRounds + 1
+                        )
                       )
                     }
                   >
@@ -712,28 +962,38 @@ export default function Timer({ onBack }: TimerProps) {
           )}
 
           {mode === 'fortime' && (
-            <div className="timer-setting-card">
-              <span>TIME CAP</span>
+            <div className="forge-timer-card">
+              <span className="forge-timer-card-label">
+                TIME CAP
+              </span>
 
-              <div className="timer-stepper">
+              <div className="forge-timer-stepper">
                 <button
                   type="button"
                   onClick={() =>
-                    setTimeCapMinutes((value) =>
-                      Math.max(1, value - 1)
+                    setTimeCapMinutes(
+                      Math.max(
+                        1,
+                        timeCapMinutes - 1
+                      )
                     )
                   }
                 >
                   −
                 </button>
 
-                <strong>{timeCapMinutes} MIN</strong>
+                <strong>
+                  {timeCapMinutes} MIN
+                </strong>
 
                 <button
                   type="button"
                   onClick={() =>
-                    setTimeCapMinutes((value) =>
-                      Math.min(99, value + 1)
+                    setTimeCapMinutes(
+                      Math.min(
+                        99,
+                        timeCapMinutes + 1
+                      )
                     )
                   }
                 >
@@ -743,126 +1003,131 @@ export default function Timer({ onBack }: TimerProps) {
             </div>
           )}
 
-          <div className="timer-setting-card">
-            <span>PREPARATION</span>
+          <div className="forge-timer-card">
+            <span className="forge-timer-card-label">
+              PREPARATION
+            </span>
 
-            <div className="timer-prep-options">
-              {[5, 10, 15].map((seconds) => (
-                <button
-                  key={seconds}
-                  type="button"
-                  className={
-                    prepTime === seconds ? 'active' : ''
-                  }
-                  onClick={() => setPrepTime(seconds)}
-                >
-                  {seconds} SEC
-                </button>
-              ))}
+            <div className="forge-timer-prep-options">
+              {[5, 10, 15].map(
+                seconds => (
+                  <button
+                    key={seconds}
+                    type="button"
+                    className={
+                      prepTime === seconds
+                        ? 'active'
+                        : ''
+                    }
+                    onClick={() =>
+                      setPrepTime(seconds)
+                    }
+                  >
+                    {seconds} SEC
+                  </button>
+                )
+              )}
             </div>
           </div>
         </section>
       )}
 
-      <section className="timer-display-section">
+      <section className="forge-timer-display">
         <div
-          className="timer-ring"
-          style={
-            {
-              '--timer-progress': `${progressPercent * 3.6}deg`
-            } as React.CSSProperties
-          }
+          className="forge-timer-ring"
+          style={ringStyle}
         >
-          <div className="timer-ring-inner">
-            {preparing ? (
+          <div className="forge-timer-ring-inner">
+            {phase === 'preparing' ? (
               <>
-                <span className="timer-status-label">
+                <span className="forge-timer-status">
                   GET READY
                 </span>
 
-                <strong className="timer-prep-number">
+                <strong className="forge-timer-prep-number">
                   {prepRemaining}
                 </strong>
               </>
             ) : (
               <>
-                <span className="timer-status-label">
-                  {finished
-                    ? 'FINISHED'
-                    : paused
-                      ? 'PAUSED'
-                      : running
-                        ? mode === 'emom'
-                          ? `ROUND ${currentRound} / ${emomRounds}`
-                          : mode === 'fortime'
-                            ? 'FOR TIME'
-                            : 'AMRAP'
-                        : 'READY'}
+                <span className="forge-timer-status">
+                  {statusText}
                 </span>
 
-                <strong className="timer-main-time">
-                  {formatTime(displayedSeconds)}
+                <strong className="forge-timer-time">
+                  {formatTime(
+                    displayedSeconds
+                  )}
                 </strong>
 
-                {mode === 'emom' && (
-                  <span className="timer-round-time">
-                    NEXT ROUND IN{' '}
-                    {formatTime(emomRoundRemaining)}
-                  </span>
-                )}
+                {mode === 'emom' &&
+                  phase !== 'idle' && (
+                    <span className="forge-timer-subtime">
+                      NEXT ROUND IN{' '}
+                      {formatTime(
+                        emomRoundRemaining
+                      )}
+                    </span>
+                  )}
 
-                {mode === 'fortime' && running && (
-                  <span className="timer-round-time">
-                    CAP REMAINING{' '}
-                    {formatTime(
-                      Math.max(
-                        0,
-                        timeCapMinutes * 60 - elapsedSeconds
-                      )
-                    )}
-                  </span>
-                )}
+                {mode ===
+                  'fortime' &&
+                  phase !== 'idle' && (
+                    <span className="forge-timer-subtime">
+                      CAP REMAINING{' '}
+                      {formatTime(
+                        remainingSeconds
+                      )}
+                    </span>
+                  )}
               </>
             )}
           </div>
         </div>
       </section>
 
-      <section className="timer-controls">
-        {!preparing && !running && !finished && (
+      <section className="forge-timer-controls">
+        {phase === 'idle' && (
           <button
             type="button"
-            className="timer-primary-button"
-            onClick={() => void startPreparation()}
+            className="forge-timer-primary"
+            onClick={() =>
+              void startPreparation()
+            }
           >
             START
           </button>
         )}
 
-        {preparing && (
+        {phase === 'preparing' && (
           <button
             type="button"
-            className="timer-secondary-button"
+            className="forge-timer-secondary"
             onClick={cancelPreparation}
           >
             CANCEL
           </button>
         )}
 
-        {running && (
+        {(phase === 'running' ||
+          phase === 'paused') && (
           <>
             <button
               type="button"
-              className="timer-primary-button"
-              onClick={() => void togglePause()}
+              className="forge-timer-primary"
+              onClick={() =>
+                void togglePause()
+              }
             >
-              {paused ? 'RESUME' : 'PAUSE'}
+              {phase === 'paused'
+                ? 'RESUME'
+                : 'PAUSE'}
             </button>
 
             {mode === 'fortime' && (
               <button
                 type="button"
-                className="timer-finish-button"
+                className="forge-timer-finish"
                 onClick={finishWorkout}
               >
                 FINISH
@@ -871,7 +1136,7 @@ export default function Timer({ onBack }: TimerProps) {
 
             <button
               type="button"
-              className="timer-secondary-button"
+              className="forge-timer-secondary"
               onClick={resetTimer}
             >
               RESET
@@ -879,10 +1144,10 @@ export default function Timer({ onBack }: TimerProps) {
           </>
         )}
 
-        {finished && (
+        {phase === 'finished' && (
           <button
             type="button"
-            className="timer-primary-button"
+            className="forge-timer-primary"
             onClick={resetTimer}
           >
             NEW TIMER
@@ -891,23 +1156,25 @@ export default function Timer({ onBack }: TimerProps) {
       </section>
 
       {showGoOverlay && (
-        <div className="timer-fullscreen-overlay timer-go-overlay">
+        <div className="forge-timer-overlay forge-go-overlay">
           <strong>GO</strong>
         </div>
       )}
 
       {roundOverlay !== null && (
-        <div className="timer-fullscreen-overlay timer-round-overlay">
+        <div className="forge-timer-overlay forge-round-overlay">
           <span>ROUND</span>
-          <strong>{roundOverlay}</strong>
+          <strong>
+            {roundOverlay}
+          </strong>
         </div>
       )}
 
       {showTimeOverlay && (
-        <div className="timer-fullscreen-overlay timer-time-overlay">
+        <div className="forge-timer-overlay forge-time-overlay">
           <strong>TIME</strong>
         </div>
       )}
-    </main>
+    </div>
   );
 }

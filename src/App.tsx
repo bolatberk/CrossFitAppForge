@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import './App.css';
 import Timer from './pages/Timer';
 
+
 type Page = 'home' | 'program' | 'timer' | 'pr';
 
 type WorkoutSection = {
@@ -1031,7 +1032,9 @@ function App() {
         />
       )}
    {activePage === 'timer' && (
-  <Timer onBack={() => changePage('home')} />
+  <Timer
+  onBack={() => setActivePage('home')}
+/>
 )}
       {activePage === 'pr' && <PRTracking />}
 

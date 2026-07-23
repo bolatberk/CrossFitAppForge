@@ -1,0 +1,439 @@
+.forge-timer-page {
+    box-sizing: border-box;
+    width: 100%;
+    min-height: calc(100vh - 170px);
+    padding: 18px 16px 120px;
+    color: #f4f6f8;
+    background:
+      radial-gradient(
+        circle at 50% 20%,
+        rgba(246, 183, 41, 0.08),
+        transparent 34%
+      ),
+      #080b0e;
+  }
+  
+  .forge-timer-page *,
+  .forge-timer-page *::before,
+  .forge-timer-page *::after {
+    box-sizing: border-box;
+  }
+  
+  .forge-timer-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 24px;
+  }
+  
+  .forge-timer-back {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    flex-shrink: 0;
+    border: 1px solid #29313a;
+    border-radius: 13px;
+    color: #f6b729;
+    background: #12171c;
+    font-size: 23px;
+    line-height: 1;
+    cursor: pointer;
+    appearance: none;
+  }
+  
+  .forge-timer-back:active {
+    transform: scale(0.96);
+  }
+  
+  .forge-timer-title {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  
+  .forge-timer-title span {
+    color: #8f9aa6;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.8px;
+  }
+  
+  .forge-timer-title h1 {
+    margin: 0;
+    color: #ffffff;
+    font-size: 30px;
+    font-weight: 900;
+    line-height: 1;
+    letter-spacing: 0.5px;
+  }
+  
+  .forge-timer-tabs {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 5px;
+    width: 100%;
+    padding: 5px;
+    margin-bottom: 18px;
+    border: 1px solid #262d34;
+    border-radius: 18px;
+    background: #111519;
+  }
+  
+  .forge-timer-tabs button {
+    min-width: 0;
+    height: 50px;
+    padding: 0 8px;
+    border: 0;
+    border-radius: 14px;
+    color: #8f9aaa;
+    background: transparent;
+    font-size: 14px;
+    font-weight: 800;
+    cursor: pointer;
+    appearance: none;
+  }
+  
+  .forge-timer-tabs button.active {
+    color: #080b0e;
+    background:
+      linear-gradient(
+        135deg,
+        #ffc43d,
+        #e8a917
+      );
+    box-shadow:
+      0 7px 20px rgba(241, 177, 31, 0.2);
+  }
+  
+  .forge-timer-tabs button:disabled {
+    cursor: not-allowed;
+    opacity: 0.55;
+  }
+  
+  .forge-timer-settings {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+  
+  .forge-timer-card {
+    width: 100%;
+    padding: 16px;
+    border: 1px solid #252d35;
+    border-radius: 17px;
+    background:
+      linear-gradient(
+        145deg,
+        #14191e,
+        #0f1317
+      );
+    box-shadow:
+      0 10px 24px rgba(0, 0, 0, 0.18);
+  }
+  
+  .forge-timer-card-label {
+    display: block;
+    margin-bottom: 13px;
+    color: #8d98a5;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 1.4px;
+  }
+  
+  .forge-timer-stepper {
+    display: grid;
+    grid-template-columns: 46px 1fr 46px;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .forge-timer-stepper button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 46px;
+    height: 46px;
+    border: 1px solid #313a43;
+    border-radius: 13px;
+    color: #f6b729;
+    background: #0a0e12;
+    font-size: 25px;
+    font-weight: 500;
+    line-height: 1;
+    cursor: pointer;
+    appearance: none;
+  }
+  
+  .forge-timer-stepper button:active {
+    transform: scale(0.95);
+  }
+  
+  .forge-timer-stepper strong {
+    min-width: 0;
+    color: #ffffff;
+    font-size: 18px;
+    font-weight: 900;
+    text-align: center;
+    letter-spacing: 0.3px;
+  }
+  
+  .forge-timer-prep-options {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+  }
+  
+  .forge-timer-prep-options button {
+    min-width: 0;
+    height: 42px;
+    border: 1px solid #303840;
+    border-radius: 12px;
+    color: #aab3bc;
+    background: #0b0f13;
+    font-size: 12px;
+    font-weight: 800;
+    cursor: pointer;
+    appearance: none;
+  }
+  
+  .forge-timer-prep-options button.active {
+    border-color: #f6b729;
+    color: #0a0d10;
+    background: #f6b729;
+  }
+  
+  .forge-timer-display {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 12px 0 24px;
+  }
+  
+  .forge-timer-ring {
+    --timer-progress: 0deg;
+  
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: min(74vw, 310px);
+    aspect-ratio: 1;
+    padding: 9px;
+    border-radius: 50%;
+    background:
+      conic-gradient(
+        #f6b729 var(--timer-progress),
+        #252b31 var(--timer-progress)
+      );
+    box-shadow:
+      0 0 0 1px #2c333a,
+      0 22px 55px rgba(0, 0, 0, 0.32),
+      0 0 38px rgba(246, 183, 41, 0.07);
+  }
+  
+  .forge-timer-ring-inner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    padding: 24px;
+    border: 1px solid #20262c;
+    border-radius: 50%;
+    background:
+      radial-gradient(
+        circle at 50% 38%,
+        #192027,
+        #0a0e12 68%
+      );
+    text-align: center;
+  }
+  
+  .forge-timer-status {
+    margin-bottom: 9px;
+    color: #f6b729;
+    font-size: 11px;
+    font-weight: 900;
+    letter-spacing: 1.7px;
+  }
+  
+  .forge-timer-time {
+    color: #ffffff;
+    font-size: clamp(42px, 13vw, 64px);
+    font-weight: 900;
+    line-height: 1;
+    letter-spacing: -2.5px;
+    font-variant-numeric: tabular-nums;
+    text-shadow:
+      0 5px 20px rgba(0, 0, 0, 0.38);
+  }
+  
+  .forge-timer-subtime {
+    margin-top: 13px;
+    color: #8995a0;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.8px;
+  }
+  
+  .forge-timer-prep-number {
+    color: #ffffff;
+    font-size: 88px;
+    font-weight: 950;
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+    text-shadow:
+      0 0 36px rgba(246, 183, 41, 0.2);
+  }
+  
+  .forge-timer-controls {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
+    width: 100%;
+    max-width: 420px;
+    margin: 0 auto;
+  }
+  
+  .forge-timer-controls button {
+    width: 100%;
+    min-height: 54px;
+    padding: 0 18px;
+    border-radius: 15px;
+    font-size: 15px;
+    font-weight: 900;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    appearance: none;
+  }
+  
+  .forge-timer-primary {
+    border: 0;
+    color: #090c0f;
+    background:
+      linear-gradient(
+        135deg,
+        #ffc43d,
+        #e9a818
+      );
+    box-shadow:
+      0 10px 26px rgba(246, 183, 41, 0.2);
+  }
+  
+  .forge-timer-primary:active,
+  .forge-timer-secondary:active,
+  .forge-timer-finish:active {
+    transform: scale(0.98);
+  }
+  
+  .forge-timer-secondary {
+    border: 1px solid #313941;
+    color: #c7cdd3;
+    background: #11161b;
+  }
+  
+  .forge-timer-finish {
+    border: 1px solid #f6b729;
+    color: #f6b729;
+    background: rgba(246, 183, 41, 0.08);
+  }
+  
+  .forge-timer-overlay {
+    position: fixed;
+    z-index: 9999;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    padding: 30px;
+    background: rgba(5, 7, 9, 0.96);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    animation: forgeOverlayIn 0.18s ease-out;
+  }
+  
+  .forge-timer-overlay strong {
+    color: #f6b729;
+    font-size: clamp(90px, 30vw, 150px);
+    font-weight: 950;
+    line-height: 0.95;
+    letter-spacing: -5px;
+    text-shadow:
+      0 0 50px rgba(246, 183, 41, 0.28);
+  }
+  
+  .forge-round-overlay span {
+    margin-bottom: 12px;
+    color: #ffffff;
+    font-size: 20px;
+    font-weight: 900;
+    letter-spacing: 7px;
+  }
+  
+  .forge-round-overlay strong {
+    font-size: clamp(110px, 35vw, 175px);
+  }
+  
+  .forge-time-overlay strong {
+    color: #ffffff;
+    font-size: clamp(75px, 27vw, 140px);
+    letter-spacing: -2px;
+  }
+  
+  @keyframes forgeOverlayIn {
+    from {
+      opacity: 0;
+      transform: scale(0.94);
+    }
+  
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+  
+  @media (min-width: 600px) {
+    .forge-timer-page {
+      width: min(100%, 620px);
+      margin: 0 auto;
+      padding-left: 24px;
+      padding-right: 24px;
+    }
+  
+    .forge-timer-settings {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  
+    .forge-timer-card:last-child {
+      grid-column: 1 / -1;
+    }
+  
+    .forge-timer-ring {
+      width: 330px;
+    }
+  }
+  
+  @media (max-width: 380px) {
+    .forge-timer-page {
+      padding-left: 12px;
+      padding-right: 12px;
+    }
+  
+    .forge-timer-tabs button {
+      font-size: 12px;
+    }
+  
+    .forge-timer-ring {
+      width: 280px;
+      max-width: 86vw;
+    }
+  
+    .forge-timer-time {
+      font-size: 46px;
+    }
+  }
