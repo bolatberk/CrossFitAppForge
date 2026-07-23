@@ -27,13 +27,7 @@ interface WakeLockSentinelLike {
   release: () => Promise<void>;
 }
 
-interface NavigatorWithWakeLock extends Navigator {
-  wakeLock?: {
-    request: (
-      type: 'screen'
-    ) => Promise<WakeLockSentinelLike>;
-  };
-}
+
 
 const pad = (value: number) =>
   value.toString().padStart(2, '0');
@@ -346,18 +340,13 @@ export default function Timer({
   };
 
   const requestWakeLock = async () => {
-    const wakeNavigator =
-      navigator as NavigatorWithWakeLock;
-
-    if (!wakeNavigator.wakeLock) {
+    if (!('wakeLock' in navigator)) {
       return;
     }
-
+  
     try {
       wakeLockRef.current =
-        await wakeNavigator.wakeLock.request(
-          'screen'
-        );
+        await navigator.wakeLock.request('screen');
     } catch (error) {
       console.warn(
         'Wake lock unavailable:',
