@@ -1,8 +1,4 @@
-import {
-  useEffect,
-  useRef,
-  useState
-} from 'react';
+import { useEffect, useRef, useState } from 'react';
 import type { CSSProperties } from 'react';
 import './Timer.css';
 
@@ -23,85 +19,46 @@ interface WindowWithWebkitAudio extends Window {
   webkitAudioContext?: typeof AudioContext;
 }
 
-interface WakeLockSentinelLike {
+interface WakeLockReference {
   release: () => Promise<void>;
 }
 
-
-
-const pad = (value: number) =>
+const pad = (value: number): string =>
   value.toString().padStart(2, '0');
 
-const formatTime = (totalSeconds: number) => {
-  const safeSeconds = Math.max(
-    0,
-    Math.floor(totalSeconds)
-  );
-
+const formatTime = (totalSeconds: number): string => {
+  const safeSeconds = Math.max(0, Math.floor(totalSeconds));
   const minutes = Math.floor(safeSeconds / 60);
   const seconds = safeSeconds % 60;
 
   return `${pad(minutes)}:${pad(seconds)}`;
 };
 
-export default function Timer({
-  onBack
-}: TimerProps) {
-  const [mode, setMode] =
-    useState<TimerMode>('amrap');
+export default function Timer({ onBack }: TimerProps) {
+  const [mode, setMode] = useState<TimerMode>('amrap');
+  const [phase, setPhase] = useState<TimerPhase>('idle');
 
-  const [phase, setPhase] =
-    useState<TimerPhase>('idle');
+  const [amrapMinutes, setAmrapMinutes] = useState(12);
+  const [emomIntervalMinutes, setEmomIntervalMinutes] = useState(1);
+  const [emomRounds, setEmomRounds] = useState(10);
+  const [timeCapMinutes, setTimeCapMinutes] = useState(15);
 
-  const [amrapMinutes, setAmrapMinutes] =
-    useState(12);
+  const [prepTime, setPrepTime] = useState(10);
+  const [prepRemaining, setPrepRemaining] = useState(10);
 
-  const [
-    emomIntervalMinutes,
-    setEmomIntervalMinutes
-  ] = useState(1);
+  const [remainingSeconds, setRemainingSeconds] = useState(12 * 60);
+  const [elapsedSeconds, setElapsedSeconds] = useState(0);
+  const [currentRound, setCurrentRound] = useState(1);
 
-  const [emomRounds, setEmomRounds] =
-    useState(10);
+  const [showGoOverlay, setShowGoOverlay] = useState(false);
+  const [roundOverlay, setRoundOverlay] = useState<number | null>(null);
+  const [showTimeOverlay, setShowTimeOverlay] = useState(false);
 
-  const [timeCapMinutes, setTimeCapMinutes] =
-    useState(15);
+  const audioContextRef = useRef<AudioContext | null>(null);
+  const wakeLockRef = useRef<WakeLockReference | null>(null);
 
-  const [prepTime, setPrepTime] =
-    useState(10);
-
-  const [prepRemaining, setPrepRemaining] =
-    useState(10);
-
-  const [remainingSeconds, setRemainingSeconds] =
-    useState(12 * 60);
-
-  const [elapsedSeconds, setElapsedSeconds] =
-    useState(0);
-
-  const [currentRound, setCurrentRound] =
-    useState(1);
-
-  const [showGoOverlay, setShowGoOverlay] =
-    useState(false);
-
-  const [roundOverlay, setRoundOverlay] =
-    useState<number | null>(null);
-
-  const [showTimeOverlay, setShowTimeOverlay] =
-    useState(false);
-
-  const audioContextRef =
-    useRef<AudioContext | null>(null);
-
-  const wakeLockRef =
-    useRef<WakeLockSentinelLike | null>(null);
-
-  const prepIntervalRef =
-    useRef<number | null>(null);
-
-  const timerIntervalRef =
-    useRef<number | null>(null);
+  const prepIntervalRef = useRef<number | null>(null);
+  const timerIntervalRef = useRef<number | null>(null);
 
   const phaseRef = useRef<TimerPhase>('idle');
   const elapsedRef = useRef(0);
@@ -112,13 +69,10 @@ export default function Timer({
     mode === 'amrap'
       ? amrapMinutes * 60
       : mode === 'emom'
-        ? emomIntervalMinutes *
-          60 *
-          emomRounds
+        ? emomIntervalMinutes * 60 * emomRounds
         : timeCapMinutes * 60;
 
-  const emomIntervalSeconds =
-    emomIntervalMinutes * 60;
+  const emomIntervalSeconds = emomIntervalMinutes * 60;
 
   const isLocked =
     phase === 'preparing' ||
@@ -141,144 +95,100 @@ export default function Timer({
     currentRoundRef.current = currentRound;
   }, [currentRound]);
 
-  const clearPrepInterval = () => {
+  const clearPrepInterval = (): void => {
     if (prepIntervalRef.current !== null) {
-      window.clearInterval(
-        prepIntervalRef.current
-      );
-
+      window.clearInterval(prepIntervalRef.current);
       prepIntervalRef.current = null;
     }
   };
 
-  const clearTimerInterval = () => {
+  const clearTimerInterval = (): void => {
     if (timerIntervalRef.current !== null) {
-      window.clearInterval(
-        timerIntervalRef.current
-      );
-
+      window.clearInterval(timerIntervalRef.current);
       timerIntervalRef.current = null;
     }
   };
 
-  const vibrate = (
-    pattern: number | number[]
-  ) => {
+  const vibrate = (pattern: number | number[]): void => {
     if ('vibrate' in navigator) {
       navigator.vibrate(pattern);
     }
   };
 
-  const getAudioContext =
-    async (): Promise<AudioContext | null> => {
-      const AudioContextClass =
-        window.AudioContext ||
-        (
-          window as WindowWithWebkitAudio
-        ).webkitAudioContext;
+  const getAudioContext = async (): Promise<AudioContext | null> => {
+    const AudioContextClass =
+      window.AudioContext ||
+      (window as WindowWithWebkitAudio).webkitAudioContext;
 
-      if (!AudioContextClass) {
-        return null;
+    if (!AudioContextClass) {
+      return null;
+    }
+
+    if (!audioContextRef.current) {
+      audioContextRef.current = new AudioContextClass();
+    }
+
+    const context = audioContextRef.current;
+
+    if (context.state === 'suspended') {
+      try {
+        await context.resume();
+      } catch (error) {
+        console.warn('Audio context could not start:', error);
       }
+    }
 
-      if (!audioContextRef.current) {
-        audioContextRef.current =
-          new AudioContextClass();
-      }
+    return context;
+  };
 
-      const context =
-        audioContextRef.current;
-
-      if (context.state === 'suspended') {
-        try {
-          await context.resume();
-        } catch (error) {
-          console.error(
-            'Audio context could not start:',
-            error
-          );
-        }
-      }
-
-      return context;
-    };
-
-  const unlockAudio = async () => {
-    const context =
-      await getAudioContext();
+  const unlockAudio = async (): Promise<void> => {
+    const context = await getAudioContext();
 
     if (!context) {
       return;
     }
 
-    const oscillator =
-      context.createOscillator();
-
-    const gain =
-      context.createGain();
+    const oscillator = context.createOscillator();
+    const gain = context.createGain();
 
     gain.gain.value = 0.0001;
 
     oscillator.connect(gain);
     gain.connect(context.destination);
 
-    oscillator.start(
-      context.currentTime
-    );
-
-    oscillator.stop(
-      context.currentTime + 0.03
-    );
+    oscillator.start(context.currentTime);
+    oscillator.stop(context.currentTime + 0.03);
   };
 
   const playTone = async (
     frequency: number,
     duration: number,
     volume: number
-  ) => {
-    const context =
-      await getAudioContext();
+  ): Promise<void> => {
+    const context = await getAudioContext();
 
-    if (
-      !context ||
-      context.state !== 'running'
-    ) {
+    if (!context || context.state !== 'running') {
       return;
     }
 
-    const oscillator =
-      context.createOscillator();
+    const oscillator = context.createOscillator();
+    const gain = context.createGain();
 
-    const gain =
-      context.createGain();
-
-    const startTime =
-      context.currentTime;
-
-    const endTime =
-      startTime + duration;
+    const startTime = context.currentTime;
+    const endTime = startTime + duration;
 
     oscillator.type = 'square';
 
-    oscillator.frequency.setValueAtTime(
-      frequency,
-      startTime
-    );
+    oscillator.frequency.setValueAtTime(frequency, startTime);
 
-    gain.gain.setValueAtTime(
-      0.0001,
-      startTime
-    );
+    gain.gain.setValueAtTime(0.0001, startTime);
 
     gain.gain.exponentialRampToValueAtTime(
       Math.max(volume, 0.001),
       startTime + 0.015
     );
 
-    gain.gain.exponentialRampToValueAtTime(
-      0.0001,
-      endTime
-    );
+    gain.gain.exponentialRampToValueAtTime(0.0001, endTime);
 
     oscillator.connect(gain);
     gain.connect(context.destination);
@@ -287,75 +197,54 @@ export default function Timer({
     oscillator.stop(endTime + 0.02);
   };
 
-  const playCountdownSound = async () => {
+  const playCountdownSound = async (): Promise<void> => {
     await playTone(880, 0.16, 0.7);
     vibrate(80);
   };
 
-  const playGoSound = async () => {
+  const playGoSound = async (): Promise<void> => {
     await playTone(1200, 0.6, 0.85);
     vibrate([120, 60, 180]);
   };
 
-  const playRoundSound = async () => {
+  const playRoundSound = async (): Promise<void> => {
     await playTone(950, 0.16, 0.75);
 
     window.setTimeout(() => {
-      void playTone(
-        1200,
-        0.24,
-        0.85
-      );
+      void playTone(1200, 0.24, 0.85);
     }, 170);
 
     vibrate([90, 50, 90]);
   };
 
-  const playFinishSound = async () => {
+  const playFinishSound = async (): Promise<void> => {
     await playTone(750, 0.2, 0.75);
 
     window.setTimeout(() => {
-      void playTone(
-        950,
-        0.2,
-        0.8
-      );
+      void playTone(950, 0.2, 0.8);
     }, 220);
 
     window.setTimeout(() => {
-      void playTone(
-        1200,
-        0.65,
-        0.9
-      );
+      void playTone(1200, 0.65, 0.9);
     }, 440);
 
-    vibrate([
-      160,
-      70,
-      160,
-      70,
-      250
-    ]);
+    vibrate([160, 70, 160, 70, 250]);
   };
 
-  const requestWakeLock = async () => {
+  const requestWakeLock = async (): Promise<void> => {
     if (!('wakeLock' in navigator)) {
       return;
     }
-  
+
     try {
       wakeLockRef.current =
         await navigator.wakeLock.request('screen');
     } catch (error) {
-      console.warn(
-        'Wake lock unavailable:',
-        error
-      );
+      console.warn('Wake lock unavailable:', error);
     }
   };
 
-  const releaseWakeLock = async () => {
+  const releaseWakeLock = async (): Promise<void> => {
     if (!wakeLockRef.current) {
       return;
     }
@@ -363,18 +252,13 @@ export default function Timer({
     try {
       await wakeLockRef.current.release();
     } catch (error) {
-      console.warn(
-        'Wake lock release failed:',
-        error
-      );
+      console.warn('Wake lock release failed:', error);
     }
 
     wakeLockRef.current = null;
   };
 
-  const showRoundOverlay = (
-    round: number
-  ) => {
+  const displayRoundOverlay = (round: number): void => {
     setRoundOverlay(round);
     void playRoundSound();
 
@@ -383,10 +267,8 @@ export default function Timer({
     }, 1000);
   };
 
-  const finishWorkout = () => {
-    if (
-      phaseRef.current === 'finished'
-    ) {
+  const finishWorkout = (): void => {
+    if (phaseRef.current === 'finished') {
       return;
     }
 
@@ -405,74 +287,35 @@ export default function Timer({
     }, 1600);
   };
 
-  const timerTick = () => {
-    if (
-      phaseRef.current !== 'running'
-    ) {
+  const timerTick = (): void => {
+    if (phaseRef.current !== 'running') {
       return;
     }
 
-    const nextElapsed =
-      elapsedRef.current + 1;
+    const nextElapsed = elapsedRef.current + 1;
 
     elapsedRef.current = nextElapsed;
     setElapsedSeconds(nextElapsed);
-
-    if (mode === 'fortime') {
-      const nextRemaining = Math.max(
-        0,
-        totalDuration - nextElapsed
-      );
-
-      remainingRef.current =
-        nextRemaining;
-
-      setRemainingSeconds(
-        nextRemaining
-      );
-
-      if (nextRemaining <= 0) {
-        finishWorkout();
-      }
-
-      return;
-    }
 
     const nextRemaining = Math.max(
       0,
       totalDuration - nextElapsed
     );
 
-    remainingRef.current =
-      nextRemaining;
-
-    setRemainingSeconds(
-      nextRemaining
-    );
+    remainingRef.current = nextRemaining;
+    setRemainingSeconds(nextRemaining);
 
     if (mode === 'emom') {
       const calculatedRound =
-        Math.floor(
-          nextElapsed /
-            emomIntervalSeconds
-        ) + 1;
+        Math.floor(nextElapsed / emomIntervalSeconds) + 1;
 
       if (
-        calculatedRound >
-          currentRoundRef.current &&
-        calculatedRound <=
-          emomRounds
+        calculatedRound > currentRoundRef.current &&
+        calculatedRound <= emomRounds
       ) {
-        currentRoundRef.current =
-          calculatedRound;
-
-        setCurrentRound(
-          calculatedRound
-        );
-
-        showRoundOverlay(
-          calculatedRound
-        );
+        currentRoundRef.current = calculatedRound;
+        setCurrentRound(calculatedRound);
+        displayRoundOverlay(calculatedRound);
       }
     }
 
@@ -481,21 +324,16 @@ export default function Timer({
     }
   };
 
-  const beginWorkout = () => {
+  const beginWorkout = (): void => {
     clearPrepInterval();
     clearTimerInterval();
 
     elapsedRef.current = 0;
-    remainingRef.current =
-      totalDuration;
-
+    remainingRef.current = totalDuration;
     currentRoundRef.current = 1;
 
     setElapsedSeconds(0);
-    setRemainingSeconds(
-      totalDuration
-    );
-
+    setRemainingSeconds(totalDuration);
     setCurrentRound(1);
 
     phaseRef.current = 'running';
@@ -510,14 +348,13 @@ export default function Timer({
       setShowGoOverlay(false);
     }, 900);
 
-    timerIntervalRef.current =
-      window.setInterval(
-        timerTick,
-        1000
-      );
+    timerIntervalRef.current = window.setInterval(
+      timerTick,
+      1000
+    );
   };
 
-  const startPreparation = async () => {
+  const startPreparation = async (): Promise<void> => {
     await unlockAudio();
 
     clearPrepInterval();
@@ -534,31 +371,25 @@ export default function Timer({
     setRoundOverlay(null);
     setShowTimeOverlay(false);
 
-    prepIntervalRef.current =
-      window.setInterval(() => {
-        countdown -= 1;
+    prepIntervalRef.current = window.setInterval(() => {
+      countdown -= 1;
 
-        setPrepRemaining(countdown);
+      setPrepRemaining(countdown);
 
-        if (
-          countdown <= 3 &&
-          countdown > 0
-        ) {
-          void playCountdownSound();
-        }
+      if (countdown <= 3 && countdown > 0) {
+        void playCountdownSound();
+      }
 
-        if (countdown <= 0) {
-          beginWorkout();
-        }
-      }, 1000);
+      if (countdown <= 0) {
+        beginWorkout();
+      }
+    }, 1000);
   };
 
-  const togglePause = async () => {
+  const togglePause = async (): Promise<void> => {
     await unlockAudio();
 
-    if (
-      phaseRef.current === 'running'
-    ) {
+    if (phaseRef.current === 'running') {
       phaseRef.current = 'paused';
       setPhase('paused');
 
@@ -566,9 +397,7 @@ export default function Timer({
       return;
     }
 
-    if (
-      phaseRef.current === 'paused'
-    ) {
+    if (phaseRef.current === 'paused') {
       phaseRef.current = 'running';
       setPhase('running');
 
@@ -576,24 +405,18 @@ export default function Timer({
     }
   };
 
-  const resetTimer = () => {
+  const resetTimer = (): void => {
     clearPrepInterval();
     clearTimerInterval();
 
     phaseRef.current = 'idle';
     elapsedRef.current = 0;
-    remainingRef.current =
-      totalDuration;
-
+    remainingRef.current = totalDuration;
     currentRoundRef.current = 1;
 
     setPhase('idle');
     setElapsedSeconds(0);
-
-    setRemainingSeconds(
-      totalDuration
-    );
-
+    setRemainingSeconds(totalDuration);
     setCurrentRound(1);
     setPrepRemaining(prepTime);
 
@@ -604,18 +427,15 @@ export default function Timer({
     void releaseWakeLock();
   };
 
-  const cancelPreparation = () => {
+  const cancelPreparation = (): void => {
     clearPrepInterval();
 
     phaseRef.current = 'idle';
     setPhase('idle');
-
     setPrepRemaining(prepTime);
   };
 
-  const changeMode = (
-    newMode: TimerMode
-  ) => {
+  const changeMode = (newMode: TimerMode): void => {
     clearPrepInterval();
     clearTimerInterval();
 
@@ -624,8 +444,13 @@ export default function Timer({
     phaseRef.current = 'idle';
     setPhase('idle');
 
+    elapsedRef.current = 0;
+    currentRoundRef.current = 1;
+
     setElapsedSeconds(0);
     setCurrentRound(1);
+
+    void releaseWakeLock();
   };
 
   useEffect(() => {
@@ -634,21 +459,13 @@ export default function Timer({
     }
 
     elapsedRef.current = 0;
-    remainingRef.current =
-      totalDuration;
+    remainingRef.current = totalDuration;
+    currentRoundRef.current = 1;
 
     setElapsedSeconds(0);
-
-    setRemainingSeconds(
-      totalDuration
-    );
-
+    setRemainingSeconds(totalDuration);
     setCurrentRound(1);
-    currentRoundRef.current = 1;
-  }, [
-    totalDuration,
-    mode
-  ]);
+  }, [totalDuration, mode]);
 
   useEffect(() => {
     if (phase === 'idle') {
@@ -657,10 +474,9 @@ export default function Timer({
   }, [prepTime, phase]);
 
   useEffect(() => {
-    const handleVisibilityChange = () => {
+    const handleVisibilityChange = (): void => {
       if (
-        document.visibilityState ===
-          'visible' &&
+        document.visibilityState === 'visible' &&
         phaseRef.current === 'running'
       ) {
         void requestWakeLock();
@@ -694,38 +510,39 @@ export default function Timer({
     };
   }, []);
 
+  const emomRoundElapsed =
+    elapsedSeconds % emomIntervalSeconds;
+
+  const emomRoundRemaining =
+    emomRoundElapsed === 0
+      ? emomIntervalSeconds
+      : emomIntervalSeconds - emomRoundElapsed;
+
   const displayedSeconds =
     mode === 'fortime'
       ? elapsedSeconds
-      : remainingSeconds;
+      : mode === 'emom'
+        ? emomRoundRemaining
+        : remainingSeconds;
 
   const progressPercent =
     totalDuration > 0
       ? mode === 'fortime'
         ? Math.min(
             100,
-            (elapsedSeconds /
-              totalDuration) *
-              100
+            (elapsedSeconds / totalDuration) * 100
           )
         : Math.min(
             100,
-            ((totalDuration -
-              remainingSeconds) /
+            ((totalDuration - remainingSeconds) /
               totalDuration) *
               100
           )
       : 0;
 
   const ringStyle = {
-    '--timer-progress':
-      `${progressPercent * 3.6}deg`
+    '--timer-progress': `${progressPercent * 3.6}deg`
   } as CSSProperties;
-
-  const emomRoundRemaining =
-    emomIntervalSeconds -
-    (elapsedSeconds %
-      emomIntervalSeconds);
 
   const statusText = (() => {
     if (phase === 'finished') {
@@ -772,45 +589,27 @@ export default function Timer({
       <div className="forge-timer-tabs">
         <button
           type="button"
-          className={
-            mode === 'amrap'
-              ? 'active'
-              : ''
-          }
+          className={mode === 'amrap' ? 'active' : ''}
           disabled={isLocked}
-          onClick={() =>
-            changeMode('amrap')
-          }
+          onClick={() => changeMode('amrap')}
         >
           AMRAP
         </button>
 
         <button
           type="button"
-          className={
-            mode === 'emom'
-              ? 'active'
-              : ''
-          }
+          className={mode === 'emom' ? 'active' : ''}
           disabled={isLocked}
-          onClick={() =>
-            changeMode('emom')
-          }
+          onClick={() => changeMode('emom')}
         >
           ExMOM
         </button>
 
         <button
           type="button"
-          className={
-            mode === 'fortime'
-              ? 'active'
-              : ''
-          }
+          className={mode === 'fortime' ? 'active' : ''}
           disabled={isLocked}
-          onClick={() =>
-            changeMode('fortime')
-          }
+          onClick={() => changeMode('fortime')}
         >
           FOR TIME
         </button>
@@ -828,29 +627,21 @@ export default function Timer({
                 <button
                   type="button"
                   onClick={() =>
-                    setAmrapMinutes(
-                      Math.max(
-                        1,
-                        amrapMinutes - 1
-                      )
+                    setAmrapMinutes(current =>
+                      Math.max(1, current - 1)
                     )
                   }
                 >
                   −
                 </button>
 
-                <strong>
-                  {amrapMinutes} MIN
-                </strong>
+                <strong>{amrapMinutes} MIN</strong>
 
                 <button
                   type="button"
                   onClick={() =>
-                    setAmrapMinutes(
-                      Math.min(
-                        99,
-                        amrapMinutes + 1
-                      )
+                    setAmrapMinutes(current =>
+                      Math.min(99, current + 1)
                     )
                   }
                 >
@@ -871,12 +662,8 @@ export default function Timer({
                   <button
                     type="button"
                     onClick={() =>
-                      setEmomIntervalMinutes(
-                        Math.max(
-                          1,
-                          emomIntervalMinutes -
-                            1
-                        )
+                      setEmomIntervalMinutes(current =>
+                        Math.max(1, current - 1)
                       )
                     }
                   >
@@ -884,22 +671,14 @@ export default function Timer({
                   </button>
 
                   <strong>
-                    E
-                    {
-                      emomIntervalMinutes
-                    }
-                    MOM
+                    E{emomIntervalMinutes}MOM
                   </strong>
 
                   <button
                     type="button"
                     onClick={() =>
-                      setEmomIntervalMinutes(
-                        Math.min(
-                          10,
-                          emomIntervalMinutes +
-                            1
-                        )
+                      setEmomIntervalMinutes(current =>
+                        Math.min(10, current + 1)
                       )
                     }
                   >
@@ -917,29 +696,21 @@ export default function Timer({
                   <button
                     type="button"
                     onClick={() =>
-                      setEmomRounds(
-                        Math.max(
-                          1,
-                          emomRounds - 1
-                        )
+                      setEmomRounds(current =>
+                        Math.max(1, current - 1)
                       )
                     }
                   >
                     −
                   </button>
 
-                  <strong>
-                    {emomRounds} ROUNDS
-                  </strong>
+                  <strong>{emomRounds} ROUNDS</strong>
 
                   <button
                     type="button"
                     onClick={() =>
-                      setEmomRounds(
-                        Math.min(
-                          99,
-                          emomRounds + 1
-                        )
+                      setEmomRounds(current =>
+                        Math.min(99, current + 1)
                       )
                     }
                   >
@@ -960,29 +731,21 @@ export default function Timer({
                 <button
                   type="button"
                   onClick={() =>
-                    setTimeCapMinutes(
-                      Math.max(
-                        1,
-                        timeCapMinutes - 1
-                      )
+                    setTimeCapMinutes(current =>
+                      Math.max(1, current - 1)
                     )
                   }
                 >
                   −
                 </button>
 
-                <strong>
-                  {timeCapMinutes} MIN
-                </strong>
+                <strong>{timeCapMinutes} MIN</strong>
 
                 <button
                   type="button"
                   onClick={() =>
-                    setTimeCapMinutes(
-                      Math.min(
-                        99,
-                        timeCapMinutes + 1
-                      )
+                    setTimeCapMinutes(current =>
+                      Math.min(99, current + 1)
                     )
                   }
                 >
@@ -998,24 +761,18 @@ export default function Timer({
             </span>
 
             <div className="forge-timer-prep-options">
-              {[5, 10, 15].map(
-                seconds => (
-                  <button
-                    key={seconds}
-                    type="button"
-                    className={
-                      prepTime === seconds
-                        ? 'active'
-                        : ''
-                    }
-                    onClick={() =>
-                      setPrepTime(seconds)
-                    }
-                  >
-                    {seconds} SEC
-                  </button>
-                )
-              )}
+              {[5, 10, 15].map(seconds => (
+                <button
+                  key={seconds}
+                  type="button"
+                  className={
+                    prepTime === seconds ? 'active' : ''
+                  }
+                  onClick={() => setPrepTime(seconds)}
+                >
+                  {seconds} SEC
+                </button>
+              ))}
             </div>
           </div>
         </section>
@@ -1044,29 +801,22 @@ export default function Timer({
                 </span>
 
                 <strong className="forge-timer-time">
-                  {formatTime(
-                    displayedSeconds
-                  )}
+                  {formatTime(displayedSeconds)}
                 </strong>
 
                 {mode === 'emom' &&
                   phase !== 'idle' && (
                     <span className="forge-timer-subtime">
-                      NEXT ROUND IN{' '}
-                      {formatTime(
-                        emomRoundRemaining
-                      )}
+                      TOTAL REMAINING{' '}
+                      {formatTime(remainingSeconds)}
                     </span>
                   )}
 
-                {mode ===
-                  'fortime' &&
+                {mode === 'fortime' &&
                   phase !== 'idle' && (
                     <span className="forge-timer-subtime">
                       CAP REMAINING{' '}
-                      {formatTime(
-                        remainingSeconds
-                      )}
+                      {formatTime(remainingSeconds)}
                     </span>
                   )}
               </>
@@ -1080,9 +830,7 @@ export default function Timer({
           <button
             type="button"
             className="forge-timer-primary"
-            onClick={() =>
-              void startPreparation()
-            }
+            onClick={() => void startPreparation()}
           >
             START
           </button>
@@ -1104,9 +852,7 @@ export default function Timer({
             <button
               type="button"
               className="forge-timer-primary"
-              onClick={() =>
-                void togglePause()
-              }
+              onClick={() => void togglePause()}
             >
               {phase === 'paused'
                 ? 'RESUME'
@@ -1153,9 +899,7 @@ export default function Timer({
       {roundOverlay !== null && (
         <div className="forge-timer-overlay forge-round-overlay">
           <span>ROUND</span>
-          <strong>
-            {roundOverlay}
-          </strong>
+          <strong>{roundOverlay}</strong>
         </div>
       )}
 
