@@ -1,0 +1,387 @@
+.movement-library-page {
+    box-sizing: border-box;
+    width: 100%;
+    min-height: 100vh;
+    padding: 18px 16px 120px;
+    color: #f4f6f8;
+    background:
+      radial-gradient(
+        circle at 50% 0%,
+        rgba(246, 183, 41, 0.08),
+        transparent 30%
+      ),
+      #080b0e;
+  }
+  
+  .movement-library-page *,
+  .movement-library-page *::before,
+  .movement-library-page *::after {
+    box-sizing: border-box;
+  }
+  
+  .movement-library-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 24px;
+  }
+  
+  .movement-library-back {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    flex-shrink: 0;
+    border: 1px solid #29313a;
+    border-radius: 13px;
+    color: #f6b729;
+    background: #12171c;
+    font-size: 23px;
+    cursor: pointer;
+  }
+  
+  .movement-library-brand {
+    display: block;
+    margin-bottom: 3px;
+    color: #8f9aa6;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 1.7px;
+  }
+  
+  .movement-library-header h1 {
+    margin: 0;
+    color: #ffffff;
+    font-size: 24px;
+    font-weight: 900;
+    line-height: 1.05;
+    letter-spacing: -0.4px;
+  }
+  
+  .movement-library-intro {
+    padding: 18px;
+    margin-bottom: 16px;
+    border: 1px solid #262e36;
+    border-radius: 18px;
+    background:
+      linear-gradient(
+        145deg,
+        #151a1f,
+        #0e1216
+      );
+  }
+  
+  .movement-library-count {
+    display: inline-flex;
+    padding: 6px 9px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    color: #0a0d10;
+    background: #f6b729;
+    font-size: 10px;
+    font-weight: 900;
+    letter-spacing: 0.8px;
+  }
+  
+  .movement-library-intro p {
+    margin: 0;
+    color: #a1abb5;
+    font-size: 14px;
+    line-height: 1.55;
+  }
+  
+  .movement-library-search-section {
+    margin-bottom: 22px;
+  }
+  
+  .movement-library-search {
+    display: grid;
+    grid-template-columns: 30px 1fr 34px;
+    align-items: center;
+    width: 100%;
+    min-height: 54px;
+    padding: 0 11px;
+    margin-bottom: 12px;
+    border: 1px solid #2a323a;
+    border-radius: 16px;
+    background: #11161b;
+  }
+  
+  .movement-library-search > span {
+    color: #f6b729;
+    font-size: 22px;
+  }
+  
+  .movement-library-search input {
+    width: 100%;
+    min-width: 0;
+    border: 0;
+    outline: none;
+    color: #ffffff;
+    background: transparent;
+    font-family: inherit;
+    font-size: 15px;
+  }
+  
+  .movement-library-search input::placeholder {
+    color: #707b86;
+  }
+  
+  .movement-library-search button {
+    width: 32px;
+    height: 32px;
+    border: 0;
+    border-radius: 10px;
+    color: #aab3bc;
+    background: #1c2329;
+    font-size: 20px;
+    cursor: pointer;
+  }
+  
+  .movement-library-filters {
+    display: flex;
+    gap: 8px;
+    width: 100%;
+    padding-bottom: 3px;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  
+  .movement-library-filters::-webkit-scrollbar {
+    display: none;
+  }
+  
+  .movement-library-filters button {
+    flex-shrink: 0;
+    height: 40px;
+    padding: 0 15px;
+    border: 1px solid #2b333b;
+    border-radius: 12px;
+    color: #929da8;
+    background: #10151a;
+    font-size: 11px;
+    font-weight: 900;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+  }
+  
+  .movement-library-filters button.active {
+    border-color: #f6b729;
+    color: #090c0f;
+    background: #f6b729;
+  }
+  
+  .movement-library-results-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+  }
+  
+  .movement-library-results-header span {
+    color: #8f9aa6;
+    font-size: 11px;
+    font-weight: 900;
+    letter-spacing: 1px;
+  }
+  
+  .movement-library-results-header strong {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 29px;
+    height: 29px;
+    padding: 0 8px;
+    border-radius: 9px;
+    color: #f6b729;
+    background: rgba(246, 183, 41, 0.1);
+    font-size: 12px;
+  }
+  
+  .movement-library-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 13px;
+  }
+  
+  .movement-library-card {
+    overflow: hidden;
+    border: 1px solid #262e36;
+    border-radius: 18px;
+    background:
+      linear-gradient(
+        145deg,
+        #151a1f,
+        #0e1216
+      );
+    box-shadow:
+      0 12px 28px rgba(0, 0, 0, 0.2);
+  }
+  
+  .movement-library-card-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px 16px 0;
+  }
+  
+  .movement-library-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 39px;
+    height: 39px;
+    border: 1px solid rgba(246, 183, 41, 0.25);
+    border-radius: 12px;
+    color: #f6b729;
+    background: rgba(246, 183, 41, 0.08);
+    font-size: 14px;
+  }
+  
+  .movement-library-category {
+    padding: 6px 9px;
+    border-radius: 8px;
+    color: #9ea8b2;
+    background: #20262c;
+    font-size: 9px;
+    font-weight: 900;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+  }
+  
+  .movement-library-card-content {
+    padding: 16px;
+  }
+  
+  .movement-library-card-content h2 {
+    margin: 0 0 8px;
+    color: #ffffff;
+    font-size: 20px;
+    font-weight: 900;
+    letter-spacing: -0.3px;
+  }
+  
+  .movement-library-card-content p {
+    margin: 0;
+    color: #919ca7;
+    font-size: 13px;
+    line-height: 1.5;
+  }
+  
+  .movement-library-alias {
+    display: block;
+    margin-top: 12px;
+    color: #6f7a84;
+    font-size: 11px;
+    line-height: 1.45;
+  }
+  
+  .movement-library-card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 13px 16px;
+    border-top: 1px solid #242b32;
+    background: rgba(5, 8, 10, 0.28);
+  }
+  
+  .movement-library-card-footer > div {
+    min-width: 0;
+  }
+  
+  .movement-library-card-footer > div span {
+    display: block;
+    margin-bottom: 3px;
+    color: #626d78;
+    font-size: 8px;
+    font-weight: 900;
+    letter-spacing: 1px;
+  }
+  
+  .movement-library-card-footer > div strong {
+    display: block;
+    overflow: hidden;
+    color: #adb6bf;
+    font-size: 11px;
+    font-weight: 800;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  
+  .movement-library-card-footer button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 41px;
+    padding: 0 14px;
+    flex-shrink: 0;
+    border: 0;
+    border-radius: 12px;
+    color: #080b0e;
+    background:
+      linear-gradient(
+        135deg,
+        #ffc43d,
+        #e9a818
+      );
+    font-size: 11px;
+    font-weight: 900;
+    cursor: pointer;
+  }
+  
+  .movement-library-card-footer button span {
+    font-size: 15px;
+  }
+  
+  .movement-library-card-footer button:active {
+    transform: scale(0.97);
+  }
+  
+  .movement-library-empty {
+    padding: 42px 20px;
+    border: 1px dashed #303941;
+    border-radius: 18px;
+    background: #10151a;
+    text-align: center;
+  }
+  
+  .movement-library-empty strong {
+    display: block;
+    margin-bottom: 8px;
+    color: #ffffff;
+    font-size: 18px;
+  }
+  
+  .movement-library-empty p {
+    margin: 0 0 18px;
+    color: #89949f;
+    font-size: 13px;
+  }
+  
+  .movement-library-empty button {
+    min-height: 42px;
+    padding: 0 15px;
+    border: 1px solid #f6b729;
+    border-radius: 12px;
+    color: #f6b729;
+    background: rgba(246, 183, 41, 0.08);
+    font-size: 11px;
+    font-weight: 900;
+    cursor: pointer;
+  }
+  
+  @media (min-width: 650px) {
+    .movement-library-page {
+      width: min(100%, 760px);
+      margin: 0 auto;
+      padding-left: 24px;
+      padding-right: 24px;
+    }
+  
+    .movement-library-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }

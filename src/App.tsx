@@ -1,9 +1,16 @@
 import { useEffect, useMemo, useState } from 'react';
 import './App.css';
+import MovementLibrary from './pages/MovementLibrary';
 import Timer from './pages/Timer';
 
 
-type Page = 'home' | 'program' | 'timer' | 'pr';
+
+type Page =
+  | 'home'
+  | 'program'
+  | 'timer'
+  | 'library'
+  | 'pr';
 
 type WorkoutSection = {
   id: string;
@@ -1036,6 +1043,13 @@ function App() {
   onBack={() => setActivePage('home')}
 />
 )}
+
+{activePage === 'library' && (
+  <MovementLibrary
+    onBack={() => setActivePage('home')}
+  />
+)}
+
       {activePage === 'pr' && <PRTracking />}
 
       <nav className="bottom-navigation">
@@ -1048,6 +1062,13 @@ function App() {
         </button>
 
         <button
+  type="button"
+  onClick={() => setActivePage('library')}
+>
+  HAREKET KÜTÜPHANESİ
+</button>
+
+        <button
           className={activePage === 'program' ? 'active' : ''}
           onClick={openProgram}
         >
@@ -1058,6 +1079,9 @@ function App() {
           className={activePage === 'timer' ? 'active' : ''}
           onClick={() => changePage('timer')}
         >
+
+
+          
           <span className="nav-icon">◷</span>
           <span>Timer</span>
         </button>
