@@ -1065,7 +1065,7 @@ function App() {
   type="button"
   onClick={() => setActivePage('library')}
 >
-  HAREKET KÜTÜPHANESİ
+  Movements
 </button>
 
         <button
