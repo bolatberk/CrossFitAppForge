@@ -176,6 +176,54 @@ export const movementLibrary: MovementVideo[] = [
     description:
       'The bar is driven overhead and received with bent knees.'
   },
+
+
+  {
+    id: 'halting-snatch-deadlift',
+    name: 'Halting Snatch Deadlift',
+    category: 'Snatch',
+    source: 'Catalyst Athletics',
+    description:
+      'Develops first pull mechanics and bar path.',
+    videoUrl:
+      'https://www.youtube.com/watch?v=BOR7S8rGM8o',
+    aliases: [
+      'Halting Snatch DL',
+      'Halting Deadlift'
+    ]
+  },
+  
+  {
+    id: 'jerk-balance',
+    name: 'Jerk Balance',
+    category: 'Jerk',
+    source: 'Catalyst Athletics',
+    description:
+      'Improves split position and jerk timing.',
+    videoUrl:
+      'https://www.youtube.com/watch?v=VWU_0OwXoPQ',
+    aliases: [
+      'Balance Jerk'
+    ]
+  },
+  
+  {
+    id: 'tall-jerk',
+    name: 'Tall Jerk',
+    category: 'Jerk',
+    source: 'Catalyst Athletics',
+    description:
+      'Develops fast footwork and aggressive lockout.',
+    videoUrl:
+      'https://www.youtube.com/watch?v=cVkN2rDWaH8',
+    aliases: [
+      'Tall Split Jerk'
+    ]
+  },
+
+
+
+
   {
     id: 'power-jerk',
     name: 'Power Jerk',
