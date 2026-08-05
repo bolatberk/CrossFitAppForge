@@ -7,30 +7,75 @@ import type {
 
 const STORAGE_KEY = 'forge-progress-v2';
 
+const EMPTY_PROGRESS: ProgressData = {
+  completedSections: {},
+};
+
+function isProgressData(value: unknown): value is ProgressData {
+  if (!value || typeof value !== 'object') {
+    return false;
+  }
+
+  const completedSections = (
+    value as Partial<ProgressData>
+  ).completedSections;
+
+  if (
+    !completedSections ||
+    typeof completedSections !== 'object' ||
+    Array.isArray(completedSections)
+  ) {
+    return false;
+  }
+
+  return Object.values(completedSections).every(
+    (sectionIds) =>
+      Array.isArray(sectionIds) &&
+      sectionIds.every(
+        (sectionId) => typeof sectionId === 'string'
+      )
+  );
+}
+
 function loadProgress(): ProgressData {
   try {
     const savedProgress = localStorage.getItem(STORAGE_KEY);
 
     if (!savedProgress) {
-      return { completedSections: {} };
+      return EMPTY_PROGRESS;
     }
 
-    return JSON.parse(savedProgress) as ProgressData;
+    const parsedProgress: unknown = JSON.parse(
+      savedProgress
+    );
+
+    return isProgressData(parsedProgress)
+      ? parsedProgress
+      : EMPTY_PROGRESS;
   } catch {
-    return { completedSections: {} };
+    return EMPTY_PROGRESS;
   }
 }
 
 export function useProgress(trainingDays: TrainingDay[]) {
-  const [progress, setProgress] = useState<ProgressData>(() => loadProgress());
+  const [progress, setProgress] = useState<ProgressData>(
+    loadProgress
+  );
 
   useEffect(() => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
+    localStorage.setItem(
+      STORAGE_KEY,
+      JSON.stringify(progress)
+    );
   }, [progress]);
 
   const completedDayIds = useMemo(() => {
     return trainingDays
       .filter((day) => {
+        if (day.sections.length === 0) {
+          return false;
+        }
+
         const completedSections =
           progress.completedSections[day.id] ?? [];
 
@@ -44,12 +89,34 @@ export function useProgress(trainingDays: TrainingDay[]) {
   const nextDay = useMemo(() => {
     return (
       trainingDays.find(
+        (day) =>
+          !day.optional &&
+          !completedDayIds.includes(day.id)
+      ) ??
+      trainingDays.find(
         (day) => !completedDayIds.includes(day.id)
-      ) ?? null
+      ) ??
+      null
     );
   }, [completedDayIds, trainingDays]);
 
-  function toggleSection(dayId: string, sectionId: string) {
+  function toggleSection(
+    dayId: string,
+    sectionId: string
+  ) {
+    const day = trainingDays.find(
+      (trainingDay) => trainingDay.id === dayId
+    );
+
+    if (
+      !day ||
+      !day.sections.some(
+        (section) => section.id === sectionId
+      )
+    ) {
+      return;
+    }
+
     setProgress((currentProgress) => {
       const currentDaySections =
         currentProgress.completedSections[dayId] ?? [];
@@ -58,7 +125,9 @@ export function useProgress(trainingDays: TrainingDay[]) {
         currentDaySections.includes(sectionId);
 
       const updatedDaySections = isAlreadyCompleted
-        ? currentDaySections.filter((id) => id !== sectionId)
+        ? currentDaySections.filter(
+            (id) => id !== sectionId
+          )
         : [...currentDaySections, sectionId];
 
       return {
