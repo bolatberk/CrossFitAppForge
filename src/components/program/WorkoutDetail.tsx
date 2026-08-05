@@ -108,8 +108,10 @@ function WorkoutDetail({
               </div>
 
               <div className="workout-items">
-                {section.items.map((item) => (
-                  <div key={item}>{item}</div>
+                {section.items.map((item, itemIndex) => (
+                  <div key={`${section.id}-${itemIndex}`}>
+                    {item}
+                  </div>
                 ))}
               </div>
             </article>
