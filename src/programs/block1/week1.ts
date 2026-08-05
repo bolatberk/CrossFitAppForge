@@ -4,13 +4,18 @@ const block1Week1: TrainingWeek = {
   id: 'block-1-week-1',
   block: 1,
   week: 1,
-  title: 'Technique Foundation',
+  title: 'Butterfly Integration',
   description:
-    'Snatch, clean, jerk, gymnastics ve temel kuvvet kapasitesi geliştirme haftası.',
-
+    'Snatch tekniği, butterfly ritmi, temel kuvvet ve yarışma tipi kondisyonun birlikte geliştirildiği başlangıç haftası.',
+  goals: [
+    'Snatch altında hız ve stabil yakalama geliştirmek.',
+    'Butterfly ritmini kontrollü tekrarlarla oluşturmak.',
+    'Clean ve jerk temel pozisyonlarını güçlendirmek.',
+    'Failure oluşturmadan sürdürülebilir yoğunluk geliştirmek.',
+  ],
   days: [
     {
-      id: 'day-a',
+      id: 'block-1-week-1-day-a',
       day: 'DAY A',
       title: 'Snatch Technique Day',
       duration: '75–90 dk',
@@ -18,12 +23,113 @@ const block1Week1: TrainingWeek = {
       purpose:
         'Snatch tekniğini geliştirmek, bar altında hız kazanmak, butterfly ritmini oluşturmak ve teknik bozulmadan sürdürülebilir kondisyon kapasitesi geliştirmek.',
       sections: [
-        // Mevcut Day A bölümleri
+        {
+          id: 'w1-a-warm-up',
+          title: 'Warm-up',
+          duration: '10–12 dk',
+          items: [
+            'Ayakkabı: TYR Lifter → Metcon Shoe',
+            '3 dk Row',
+            'World’s Greatest Stretch — 5/5',
+            'Banded Shoulder Pass Through — 15',
+            'Ankle Rock — 15/15',
+            'Empty Bar Flow — 2 tur',
+            '5 Muscle Snatch',
+            '5 Overhead Squat',
+            '5 Snatch Balance',
+            '5 Drop Snatch',
+          ],
+        },
+        {
+          id: 'w1-a-mobility',
+          title: 'Mobility',
+          items: [
+            'World’s Greatest Stretch — 5/5',
+            'Banded Shoulder Pass Through — 15',
+            'Ankle Rock — 15/15',
+          ],
+        },
+        {
+          id: 'w1-a-olympic-drill',
+          title: 'Olympic Drill',
+          items: [
+            'Tall Snatch — 4×3 @ %40–50',
+            'No Foot Snatch — 3×2 @ %40–50',
+            'Odak: Barı yukarı çekme.',
+            'Odak: Hızlı altına girme.',
+            'Odak: Sessiz ayaklar.',
+          ],
+        },
+        {
+          id: 'w1-a-olympic-lift',
+          title: 'Olympic Lift',
+          items: [
+            'Snatch — 6×2 @ %75 / yaklaşık 50 kg',
+            'RPE: 6–7',
+            'Video: Son 2 set',
+            'Odak: Kontrollü bar yolu.',
+            'Odak: Hızlı çekiş ve aktif pull-under.',
+            'Odak: Stabil yakalama.',
+          ],
+        },
+        {
+          id: 'w1-a-gymnastics',
+          title: 'Gymnastics',
+          duration: 'EMOM 10',
+          items: [
+            'Tek dakikalar: 4–6 Butterfly Pull-up',
+            'Çift dakikalar: 8 Beat Swing + 4 Jumping Butterfly',
+            'Amaç: Ritim oluşturmak.',
+            'Amaç: Omuzu yormadan tekrar biriktirmek.',
+            'Failure yok.',
+          ],
+        },
+        {
+          id: 'w1-a-strength',
+          title: 'Strength',
+          items: [
+            'Back Squat — 5×5 @ %72.5 / yaklaşık 80 kg',
+            'Tempo: 31X1',
+            'RPE: 7',
+            'Odak: Sıkı core ve kontrollü tempo.',
+          ],
+        },
+        {
+          id: 'w1-a-metcon',
+          title: 'Metcon',
+          duration: '10 dk AMRAP',
+          items: [
+            '6 Power Snatch @ 40 kg',
+            '8 Box Jump Over',
+            '10 Cal Row',
+            'Yoğunluk: Yaklaşık %75.',
+            'Amaç: Teknik bozulmadan nefes kontrolü.',
+          ],
+        },
+        {
+          id: 'w1-a-accessory',
+          title: 'Accessory',
+          items: [
+            '3 tur:',
+            '12 Snatch Grip Romanian Deadlift',
+            '15 Face Pull',
+            '30 sn Hollow Hold',
+          ],
+        },
+        {
+          id: 'w1-a-cool-down',
+          title: 'Cool Down',
+          items: [
+            'Hafif yürüyüş veya kolay Row',
+            'Lat ve omuz esnetme',
+            'Kalça ve ayak bileği mobilitesi',
+            'Kontrollü nefes',
+          ],
+        },
       ],
     },
-
     {
-      id: 'day-b',
+      id: 'block-1-week-1-day-b',
       day: 'DAY B',
       title: 'Clean Development Day',
       duration: '75–90 dk',
@@ -31,12 +137,113 @@ const block1Week1: TrainingWeek = {
       purpose:
         'Clean tekniğini geliştirmek, hızlı rack pozisyonu oluşturmak, çekiş kuvvetini artırmak ve sürdürülebilir barbell cycling kapasitesi geliştirmek.',
       sections: [
-        // Mevcut Day B bölümleri
+        {
+          id: 'w1-b-warm-up',
+          title: 'Warm-up',
+          duration: '10–12 dk',
+          items: [
+            'Ayakkabı: TYR Lifter → Metcon Shoe',
+            '5 dk Bike',
+            'Hip Opener — 10/10',
+            'Front Rack Stretch — 45 sn',
+            'Scap CARs — 10',
+            'Ankle Rock — 15/15',
+            'Bar Prep Flow — 2 tur',
+            '5 Muscle Clean',
+            '5 Front Squat',
+            '5 Clean Pull',
+            '5 Hang Power Clean',
+          ],
+        },
+        {
+          id: 'w1-b-mobility',
+          title: 'Mobility',
+          items: [
+            'Hip Opener — 10/10',
+            'Front Rack Stretch — 45 sn',
+            'Scap CARs — 10',
+            'Ankle Rock — 15/15',
+          ],
+        },
+        {
+          id: 'w1-b-olympic-drill',
+          title: 'Olympic Drill',
+          items: [
+            'Tall Clean — 4×3 @ %40–50',
+            'Clean High Pull — 3×3 @ %40–50',
+            'Odak: Hızlı çekiş ve hızlı dirsek dönüşü.',
+            'Odak: Sağlam rack pozisyonu.',
+            'Odak: Hafif ayak teması.',
+          ],
+        },
+        {
+          id: 'w1-b-olympic-lift',
+          title: 'Olympic Lift',
+          items: [
+            'Clean — 6×2 @ %75 / yaklaşık 67.5 kg',
+            'RPE: 6–7',
+            'Video: Son set',
+            'Odak: Dik ve yakın bar yolu.',
+            'Odak: Triple extension ve hızlı rack.',
+          ],
+        },
+        {
+          id: 'w1-b-gymnastics',
+          title: 'Gymnastics / Pull Strength',
+          items: [
+            'Weighted Strict Pull-up — 5×5',
+            'Başlangıç: Vücut ağırlığı',
+            'Kolay gelirse: +2.5 kg',
+            'Odak: Tam açılış, çene bar üstünde ve kontrollü iniş.',
+          ],
+        },
+        {
+          id: 'w1-b-strength',
+          title: 'Strength',
+          items: [
+            'Front Squat — 5×4 @ %72.5 / yaklaşık 75 kg',
+            'Tempo: 31X1',
+            'RPE: 7',
+            'Odak: Dik gövde ve yüksek dirsekler.',
+          ],
+        },
+        {
+          id: 'w1-b-metcon',
+          title: 'Metcon',
+          duration: '12 dk EMOM',
+          items: [
+            '1. dakika: 8 Hang Power Clean @ 50 kg',
+            '2. dakika: 10 Burpee',
+            '3. dakika: 12/10 Cal Bike',
+            'Amaç: Barbell cycling ve sürdürülebilir tempo.',
+            'Yoğunluk: Yaklaşık %75–80.',
+          ],
+        },
+        {
+          id: 'w1-b-accessory',
+          title: 'Accessory',
+          items: [
+            '3 tur:',
+            '10 Bulgarian Split Squat / bacak',
+            '15 Ring Row',
+            '15 Band External Rotation',
+          ],
+        },
+        {
+          id: 'w1-b-cool-down',
+          title: 'Cool Down',
+          items: [
+            'Hafif Bike',
+            'Front Rack Stretch',
+            'Kalça fleksör esnetme',
+            'Thoracic Rotation',
+            'Kontrollü nefes',
+          ],
+        },
       ],
     },
-
     {
-      id: 'day-c',
+      id: 'block-1-week-1-day-c',
       day: 'DAY C',
       title: 'Competition Conditioning Day',
       duration: '80–95 dk',
@@ -44,20 +251,212 @@ const block1Week1: TrainingWeek = {
       purpose:
         'Split jerk tekniğini geliştirmek, yorgunluk altında butterfly ritmini korumak ve yarışma temposunda geçiş, nefes ve pacing kapasitesi oluşturmak.',
       sections: [
-        // Mevcut Day C bölümleri
+        {
+          id: 'w1-c-warm-up',
+          title: 'Warm-up',
+          items: [
+            'Ayakkabı: TYR Lifter → Metcon Shoe',
+            '5 dk Row',
+            'World’s Greatest Stretch — 5/5',
+            'Cat-Cow — 10',
+            'Scapular Wall Slide — 10',
+            'Ankle Rock — 15/15',
+            'Hip Opener — 10/10',
+            'Bar Prep Flow — 2 tur',
+            '5 PVC Pass Through',
+            '5 Overhead Squat',
+            '5 Good Morning',
+            '5 Front Rack Lunge',
+          ],
+        },
+        {
+          id: 'w1-c-mobility',
+          title: 'Mobility',
+          items: [
+            'World’s Greatest Stretch — 5/5',
+            'Cat-Cow — 10',
+            'Scapular Wall Slide — 10',
+            'Ankle Rock — 15/15',
+            'Hip Opener — 10/10',
+          ],
+        },
+        {
+          id: 'w1-c-olympic-drill',
+          title: 'Olympic Drill',
+          items: [
+            'Jerk Balance — 4×3 @ %40–50',
+            'Tall Jerk — 3×2 @ %40–50',
+            'Footwork Drill — 3×3',
+            'Odak: Dik dip, patlayıcı drive ve stabil split.',
+          ],
+        },
+        {
+          id: 'w1-c-olympic-lift',
+          title: 'Olympic Lift',
+          items: [
+            'Split Jerk — 6×2 @ %75 / yaklaşık 60 kg',
+            'RPE: 6–7',
+            'Video: Son 2 set',
+            'Odak: Dik dip, hızlı lockout ve kontrollü recovery.',
+          ],
+        },
+        {
+          id: 'w1-c-gymnastics',
+          title: 'Gymnastics',
+          duration: 'EMOM 8',
+          items: [
+            '1. dakika: 5 Butterfly Pull-up',
+            '2. dakika: 8 Burpee Over Bar',
+            'Odak: Ritmi koru ve omuzu koru.',
+          ],
+        },
+        {
+          id: 'w1-c-strength',
+          title: 'Strength',
+          items: [
+            'Push Press — 5×5 @ %70 / yaklaşık 40 kg',
+            'Tempo: 20X1',
+            'RPE: 7',
+            'Odak: Leg drive ve güçlü lockout.',
+          ],
+        },
+        {
+          id: 'w1-c-metcon',
+          title: 'Metcon — Competition WOD',
+          duration: 'Time Cap: 18 dk',
+          items: [
+            '3 Round For Time',
+            '400 m Run',
+            '15 Wall Ball @ 9/6 kg',
+            '12 Toes to Bar',
+            '9 Clean @ 60 kg',
+            'Odak: Geçişler 3 sn veya daha kısa.',
+            'Odak: İstikrarlı pace ve verimli kipping.',
+          ],
+        },
+        {
+          id: 'w1-c-accessory',
+          title: 'Accessory',
+          items: [
+            '3 tur:',
+            '12 Copenhagen Plank / taraf',
+            '15 Scap Pull-up',
+            '15 Banded Y-Raise',
+            '60 sn Heavy Farmer Carry',
+          ],
+        },
+        {
+          id: 'w1-c-cool-down',
+          title: 'Cool Down',
+          items: [
+            'Hafif yürüyüş veya Row',
+            'Omuz ve lat esnetme',
+            'Kalça fleksör esnetme',
+            'Hamstring mobilitesi',
+            'Kontrollü nefes',
+          ],
+        },
       ],
     },
-
     {
-      id: 'day-d',
+      id: 'block-1-week-1-day-d',
       day: 'DAY D',
       title: 'Home Performance Builder',
       duration: '55–60 dk',
       focus: 'Butterfly · Tempo Squat · Upper Body · Grip',
       purpose:
         'Tekniği geliştirmek, zayıf halkaları güçlendirmek, butterfly ritmini artırmak ve ertesi güne toparlanmış şekilde geçmek.',
+      optional: true,
       sections: [
-        // Mevcut Day D bölümleri
+        {
+          id: 'w1-d-warm-up',
+          title: 'Warm-up',
+          duration: '8 dk',
+          items: [
+            'Yer: Home Workout',
+            'Hedef RPE: 6–7',
+            '2 tur:',
+            '10 Air Squat',
+            '8 Scap Pull-up',
+            '8 Push-up',
+            '20 sn Dead Hang',
+            '10 Cat-Cow',
+            '10 Bar Pass Through',
+          ],
+        },
+        {
+          id: 'w1-d-skill',
+          title: 'Skill',
+          duration: 'EMOM 12',
+          items: [
+            'Tek dakikalar: 4–5 Butterfly Pull-up',
+            'Çift dakikalar: 6 Beat Swing + 3 Jumping Butterfly + 10 sn Active Hang',
+            'Failure yok.',
+            'Her sette kalite.',
+          ],
+        },
+        {
+          id: 'w1-d-gymnastics',
+          title: 'Gymnastics',
+          items: [
+            'Strict Pull-up — 4 tur × 4 tekrar',
+            'Dinlenme: Superset turu sonunda 60 sn',
+          ],
+        },
+        {
+          id: 'w1-d-strength',
+          title: 'Strength',
+          items: [
+            'Tempo Back Squat — 4×5 @ 70 kg',
+            'Tempo: 31X1',
+            'Dinlenme: 90 sn',
+            'RPE: 6–7',
+          ],
+        },
+        {
+          id: 'w1-d-upper-body',
+          title: 'Upper Body Builder',
+          items: [
+            '4 tur superset:',
+            'A) Strict Press — 6 tekrar @ 35 kg',
+            'B) Strict Pull-up — 4 tekrar',
+            'Dinlenme: 60 sn',
+          ],
+        },
+        {
+          id: 'w1-d-accessory',
+          title: 'Accessory — Bulletproof Circuit',
+          duration: '10 dk / 3 tur',
+          items: [
+            '10/10 Single Arm Dumbbell Romanian Deadlift',
+            '12/12 Single Arm Dumbbell Row',
+            '10/10 Single Arm Floor Press',
+            '12/12 Dead Bug',
+            'Dinlenme: Tur sonunda 60 sn',
+          ],
+        },
+        {
+          id: 'w1-d-conditioning',
+          title: 'Conditioning — Quick Finisher',
+          duration: '5 dk AMRAP',
+          items: [
+            '20 m Single Arm Farmer Carry / sağ',
+            '20 m Single Arm Farmer Carry / sol',
+            '5 Push-up',
+            '5 Air Squat',
+          ],
+        },
+        {
+          id: 'w1-d-cool-down',
+          title: 'Cool Down',
+          items: [
+            'Omuz ve lat esnetme',
+            'Kalça mobilitesi',
+            'Hafif spinal rotation',
+            'Kontrollü nefes',
+            'Altın kural: Failure yok, RIR 2–3 ve ertesi gün toparlanmış hisset.',
+          ],
+        },
       ],
     },
   ],
