@@ -26,7 +26,7 @@ function App() {
     activeWeek,
     availableWeeks,
     selectWeek,
-  } = useProgram(1, 1);
+  } = useProgram(1);
 
   const trainingDays = activeWeek.days;
 
@@ -40,7 +40,7 @@ function App() {
 
   const selectedDay =
     trainingDays.find(
-      (day) => day.id === selectedDayId
+      day => day.id === selectedDayId
     ) ?? null;
 
   const nextDayAfterSelected = useMemo(() => {
@@ -50,11 +50,12 @@ function App() {
 
     const selectedDayIndex =
       trainingDays.findIndex(
-        (day) => day.id === selectedDay.id
+        day => day.id === selectedDay.id
       );
 
     return selectedDayIndex >= 0
-      ? trainingDays[selectedDayIndex + 1] ?? null
+      ? trainingDays[selectedDayIndex + 1] ??
+          null
       : null;
   }, [selectedDay, trainingDays]);
 
@@ -68,6 +69,11 @@ function App() {
     setActivePage('program');
   }
 
+  function goHome() {
+    setSelectedDayId(null);
+    setActivePage('home');
+  }
+
   function changePage(page: Page) {
     setSelectedDayId(null);
     setActivePage(page);
@@ -76,11 +82,17 @@ function App() {
   function changeWeek(weekNumber: number) {
     selectWeek(weekNumber);
     setSelectedDayId(null);
+    setActivePage('home');
   }
 
   return (
     <div className="app-shell">
-      <Header activeWeek={activeWeek} />
+      <Header
+        activeWeek={activeWeek}
+        availableWeeks={availableWeeks}
+        onSelectWeek={changeWeek}
+        onGoHome={goHome}
+      />
 
       {activePage === 'home' && (
         <HomePage
@@ -116,7 +128,7 @@ function App() {
             )}
             nextDay={nextDayAfterSelected}
             onBack={openProgram}
-            onToggleSection={(sectionId) =>
+            onToggleSection={sectionId =>
               toggleSection(
                 selectedDay.id,
                 sectionId
@@ -127,15 +139,11 @@ function App() {
         )}
 
       {activePage === 'timer' && (
-        <Timer
-          onBack={() => changePage('home')}
-        />
+        <Timer onBack={goHome} />
       )}
 
       {activePage === 'library' && (
-        <MovementLibrary
-          onBack={() => changePage('home')}
-        />
+        <MovementLibrary onBack={goHome} />
       )}
 
       {activePage === 'pr' && <PRTracking />}
