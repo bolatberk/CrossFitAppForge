@@ -3,7 +3,7 @@ const personalRecords = [
     ['Front Squat', '105 kg'],
     ['Clean', '90 kg'],
     ['Clean & Jerk', '80 kg'],
-    ['Snatch', '65 kg'],
+    ['Snatch', '70 kg'],
     ['Push Press', '80 kg'],
   ];
   
