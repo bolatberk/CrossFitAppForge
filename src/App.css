@@ -1052,3 +1052,75 @@ select {
 .week-selector button.active:hover {
   color: #101318;
 }
+/* WEEK BRIEF + OPTIONAL DAY */
+.week-brief-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  margin: 0 0 22px;
+}
+
+.week-brief-card {
+  padding: 18px;
+  border: 1px solid #2a3139;
+  border-radius: 16px;
+  background: #11161c;
+}
+
+.week-brief-card > span {
+  display: block;
+  margin-bottom: 12px;
+  color: #f7b733;
+  font-size: 0.74rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+}
+
+.week-brief-card ul {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding-left: 18px;
+  color: #c7d0da;
+  line-height: 1.5;
+}
+
+.week-note-card {
+  background: linear-gradient(
+      145deg,
+      rgba(247, 183, 51, 0.08),
+      transparent 60%
+    ),
+    #11161c;
+}
+
+.program-day-label {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.program-day-label small {
+  padding: 4px 7px;
+  border: 1px solid rgba(247, 183, 51, 0.35);
+  border-radius: 999px;
+  color: #f7b733;
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+}
+
+@media (max-width: 680px) {
+  .week-brief-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .week-selector {
+    width: 100%;
+    overflow-x: auto;
+  }
+
+  .week-selector button {
+    flex: 0 0 auto;
+  }
+}
