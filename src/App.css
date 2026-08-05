@@ -1124,3 +1124,287 @@ select {
     flex: 0 0 auto;
   }
 }
+/* ==================================================
+   FORGE HEADER + WEEK SELECTOR THEME FIX
+   Bunu App.css dosyasının EN ALTINA ekle
+   ================================================== */
+
+.brand-container.brand-button {
+  appearance: none !important;
+  -webkit-appearance: none !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  color: inherit !important;
+  text-align: left !important;
+  background: transparent !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  cursor: pointer;
+}
+
+.brand-container.brand-button:hover,
+.brand-container.brand-button:focus,
+.brand-container.brand-button:active {
+  color: inherit !important;
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  transform: none !important;
+}
+
+.brand-container.brand-button .brand-logo {
+  display: grid;
+  flex: 0 0 38px;
+  width: 38px;
+  height: 38px;
+  place-items: center;
+  color: #101419;
+  background: #f0b43c;
+  border-radius: 12px 12px 14px 14px;
+  font-size: 21px;
+  font-weight: 950;
+  font-style: italic;
+  box-shadow: 0 5px 18px rgba(240, 180, 60, 0.2);
+}
+
+.brand-container.brand-button .brand-mark {
+  display: block;
+  color: #f0b43c;
+  font-size: 20px;
+  font-weight: 900;
+  letter-spacing: 0.14em;
+}
+
+.brand-container.brand-button p {
+  margin: 3px 0 0;
+  color: #a6b0ba;
+  font-size: 12px;
+  font-weight: 400;
+}
+
+.week-menu-container {
+  position: relative;
+  z-index: 100;
+}
+
+.week-menu-container .week-chip {
+  appearance: none !important;
+  -webkit-appearance: none !important;
+  display: block;
+  min-width: 82px;
+  margin: 0;
+  padding: 9px 12px;
+  color: inherit;
+  text-align: left;
+  background: #151a20 !important;
+  border: 1px solid #39424d !important;
+  border-radius: 14px;
+  box-shadow: none !important;
+  cursor: pointer;
+  transition:
+    border-color 160ms ease,
+    background-color 160ms ease,
+    transform 160ms ease;
+}
+
+.week-menu-container .week-chip:hover,
+.week-menu-container .week-chip.open {
+  background: #191f26 !important;
+  border-color: rgba(240, 180, 60, 0.75) !important;
+}
+
+.week-menu-container .week-chip:active {
+  transform: scale(0.98);
+}
+
+.week-menu-container .week-chip > span {
+  display: block;
+  color: #929ca7;
+  font-size: 10px;
+  line-height: 1.2;
+}
+
+.week-chip-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 3px;
+}
+
+.week-chip-bottom strong {
+  color: #f0b43c;
+  font-size: 18px;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.week-chip-chevron {
+  color: #f0b43c !important;
+  font-size: 15px !important;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.week-menu {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  z-index: 200;
+  width: min(290px, calc(100vw - 36px));
+  padding: 12px;
+  color: #f4f6f8;
+  background:
+    radial-gradient(
+      circle at top right,
+      rgba(240, 180, 60, 0.11),
+      transparent 12rem
+    ),
+    #12171d;
+  border: 1px solid #353e48;
+  border-radius: 18px;
+  box-shadow:
+    0 24px 70px rgba(0, 0, 0, 0.58),
+    0 0 0 1px rgba(255, 255, 255, 0.02);
+  animation: forgeWeekMenuOpen 150ms ease-out;
+}
+
+@keyframes forgeWeekMenuOpen {
+  from {
+    opacity: 0;
+    transform: translateY(-5px) scale(0.98);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.week-menu-title {
+  display: block;
+  padding: 8px 10px 10px;
+  color: #8f9aa5;
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 0.13em;
+}
+
+.week-menu-list {
+  display: grid;
+  gap: 5px;
+}
+
+.week-menu-item {
+  appearance: none !important;
+  -webkit-appearance: none !important;
+  display: grid;
+  grid-template-columns: 42px 1fr 24px;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  margin: 0;
+  padding: 12px 10px;
+  color: #aab4bf;
+  text-align: left;
+  background: transparent !important;
+  border: 1px solid transparent !important;
+  border-radius: 12px;
+  box-shadow: none !important;
+  cursor: pointer;
+}
+
+.week-menu-item:hover {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.05) !important;
+}
+
+.week-menu-item.active {
+  color: #ffffff;
+  background: rgba(240, 180, 60, 0.14) !important;
+  border-color: rgba(240, 180, 60, 0.2) !important;
+}
+
+.week-menu-code {
+  color: #ffffff;
+  font-size: 17px;
+  font-weight: 900;
+}
+
+.week-menu-name {
+  color: inherit;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.week-menu-radio {
+  color: #77838f;
+  font-size: 18px;
+  text-align: center;
+}
+
+.week-menu-item.active .week-menu-radio {
+  color: #f0b43c;
+}
+
+.week-menu-divider {
+  height: 1px;
+  margin: 10px 8px;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.week-menu-home {
+  appearance: none !important;
+  -webkit-appearance: none !important;
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  width: 100%;
+  margin: 0;
+  padding: 11px 12px;
+  color: #e7edf3;
+  text-align: left;
+  background: transparent !important;
+  border: 0 !important;
+  border-radius: 11px;
+  box-shadow: none !important;
+  font-size: 13px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.week-menu-home:hover {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.05) !important;
+}
+
+.week-menu-home span:first-child {
+  color: #f0b43c;
+  font-size: 19px;
+}
+
+@media (max-width: 520px) {
+  .app-header {
+    padding-inline: 14px;
+  }
+
+  .brand-container.brand-button .brand-mark {
+    font-size: 17px;
+  }
+
+  .brand-container.brand-button p {
+    font-size: 10px;
+  }
+
+  .week-menu {
+    position: fixed;
+    top: 78px;
+    right: 14px;
+    left: 14px;
+    width: auto;
+  }
+}
