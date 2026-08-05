@@ -12,6 +12,7 @@ export interface TrainingDay {
   duration: string;
   focus: string;
   purpose: string;
+  optional?: boolean;
   sections: TrainingSection[];
 }
 
@@ -21,6 +22,8 @@ export interface TrainingWeek {
   week: number;
   title: string;
   description?: string;
+  goals?: string[];
+  notes?: string[];
   days: TrainingDay[];
 }
 
