@@ -1,35 +1,33 @@
 import block1Week1 from './block1/week1';
 import block1Week2 from './block1/week2';
 import block1Week3 from './block1/week3';
+import block1Week4 from './block1/week4';
 
 import type {
   TrainingBlock,
   TrainingWeek,
 } from '../types/training';
 
-const compareWeeks = (
-  firstWeek: TrainingWeek,
-  secondWeek: TrainingWeek
-): number =>
-  firstWeek.block - secondWeek.block ||
-  firstWeek.week - secondWeek.week;
-
-export const trainingProgram: readonly TrainingWeek[] = [
+export const trainingProgram: TrainingWeek[] = [
   block1Week1,
   block1Week2,
   block1Week3,
-].sort(compareWeeks);
+  block1Week4,
+];
 
-export const trainingBlocks: readonly TrainingBlock[] = [
+export const trainingBlocks: TrainingBlock[] = [
   {
     id: 'block-1',
     block: 1,
     title: 'Butterfly Integration',
     description:
-      'Olympic teknik, butterfly gelişimi, temel kuvvet ve competition capacity entegrasyonu.',
-    weeks: trainingProgram.filter(
-      (week) => week.block === 1
-    ),
+      'Olympic teknik, butterfly kapasitesi, temel kuvvet ve competition engine gelişim bloğu.',
+    weeks: trainingProgram
+      .filter((week) => week.block === 1)
+      .sort(
+        (firstWeek, secondWeek) =>
+          firstWeek.week - secondWeek.week
+      ),
   },
 ];
 
@@ -47,9 +45,14 @@ export function getTrainingWeek(
 export function getAvailableWeeks(
   blockNumber: number
 ): TrainingWeek[] {
-  return trainingProgram.filter(
-    (program) => program.block === blockNumber
-  );
+  return trainingProgram
+    .filter(
+      (program) => program.block === blockNumber
+    )
+    .sort(
+      (firstWeek, secondWeek) =>
+        firstWeek.week - secondWeek.week
+    );
 }
 
 export function getTrainingBlock(
