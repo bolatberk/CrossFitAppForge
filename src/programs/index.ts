@@ -2,6 +2,7 @@ import block1Week1 from './block1/week1';
 import block1Week2 from './block1/week2';
 import block1Week3 from './block1/week3';
 import block1Week4 from './block1/week4';
+import block1Week5 from './block1/week5';
 
 import type {
   TrainingBlock,
@@ -13,6 +14,7 @@ export const trainingProgram: TrainingWeek[] = [
   block1Week2,
   block1Week3,
   block1Week4,
+  block1Week5,
 ];
 
 export const trainingBlocks: TrainingBlock[] = [
@@ -46,9 +48,7 @@ export function getAvailableWeeks(
   blockNumber: number
 ): TrainingWeek[] {
   return trainingProgram
-    .filter(
-      (program) => program.block === blockNumber
-    )
+    .filter((program) => program.block === blockNumber)
     .sort(
       (firstWeek, secondWeek) =>
         firstWeek.week - secondWeek.week
