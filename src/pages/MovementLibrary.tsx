@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import {
   movementLibrary,
-  type MovementCategory
+  type MovementCategory,
 } from '../data/movementLibrary';
 import './MovementLibrary.css';
 
@@ -9,19 +9,18 @@ interface MovementLibraryProps {
   onBack: () => void;
 }
 
-type CategoryFilter =
-  | 'All'
-  | MovementCategory;
+type CategoryFilter = 'All' | MovementCategory;
 
 const categories: CategoryFilter[] = [
   'All',
   'Snatch',
   'Clean',
-  'Jerk'
+  'Jerk',
+  'Other',
 ];
 
 export default function MovementLibrary({
-  onBack
+  onBack,
 }: MovementLibraryProps) {
   const [searchText, setSearchText] =
     useState('');
@@ -33,7 +32,7 @@ export default function MovementLibrary({
     const normalizedSearch =
       searchText.trim().toLocaleLowerCase();
 
-    return movementLibrary.filter(movement => {
+    return movementLibrary.filter((movement) => {
       const categoryMatches =
         selectedCategory === 'All' ||
         movement.category === selectedCategory;
@@ -43,7 +42,7 @@ export default function MovementLibrary({
         movement.category,
         movement.source,
         movement.description ?? '',
-        ...(movement.aliases ?? [])
+        ...(movement.aliases ?? []),
       ]
         .join(' ')
         .toLocaleLowerCase();
@@ -80,7 +79,6 @@ export default function MovementLibrary({
           <span className="movement-library-brand">
             FORGE PERFORMANCE
           </span>
-
           <h1>HAREKET KÜTÜPHANESİ</h1>
         </div>
       </header>
@@ -89,27 +87,23 @@ export default function MovementLibrary({
         <span className="movement-library-count">
           {movementLibrary.length} HAREKET
         </span>
-
         <p>
-          Olympic lifting hareketlerinin Catalyst
-          Athletics eğitim videolarına ulaş.
+          Olympic lifting hareketlerinin teknik videolarına ulaş.
         </p>
       </section>
 
       <section className="movement-library-search-section">
         <div className="movement-library-search">
           <span aria-hidden="true">⌕</span>
-
           <input
             type="search"
             value={searchText}
-            onChange={event =>
+            onChange={(event) =>
               setSearchText(event.target.value)
             }
             placeholder="Hareket ara..."
             aria-label="Hareket ara"
           />
-
           {searchText.length > 0 && (
             <button
               type="button"
@@ -122,7 +116,7 @@ export default function MovementLibrary({
         </div>
 
         <div className="movement-library-filters">
-          {categories.map(category => (
+          {categories.map((category) => (
             <button
               key={category}
               type="button"
@@ -150,15 +144,12 @@ export default function MovementLibrary({
               ? 'TÜM HAREKETLER'
               : selectedCategory.toUpperCase()}
           </span>
-
-          <strong>
-            {filteredMovements.length}
-          </strong>
+          <strong>{filteredMovements.length}</strong>
         </div>
 
         {filteredMovements.length > 0 ? (
           <div className="movement-library-grid">
-            {filteredMovements.map(movement => (
+            {filteredMovements.map((movement) => (
               <article
                 key={movement.id}
                 className="movement-library-card"
@@ -167,7 +158,6 @@ export default function MovementLibrary({
                   <div className="movement-library-icon">
                     ▶
                   </div>
-
                   <span className="movement-library-category">
                     {movement.category}
                   </span>
@@ -175,11 +165,9 @@ export default function MovementLibrary({
 
                 <div className="movement-library-card-content">
                   <h2>{movement.name}</h2>
-
                   {movement.description && (
                     <p>{movement.description}</p>
                   )}
-
                   {movement.aliases &&
                     movement.aliases.length > 0 && (
                       <span className="movement-library-alias">
@@ -192,23 +180,16 @@ export default function MovementLibrary({
                 <div className="movement-library-card-footer">
                   <div>
                     <span>SOURCE</span>
-                    <strong>
-                      {movement.source}
-                    </strong>
+                    <strong>{movement.source}</strong>
                   </div>
-
                   <button
                     type="button"
                     onClick={() =>
-                      openVideo(
-                        movement.videoUrl
-                      )
+                      openVideo(movement.videoUrl)
                     }
                   >
                     VİDEOYU AÇ
-                    <span aria-hidden="true">
-                      ↗
-                    </span>
+                    <span aria-hidden="true">↗</span>
                   </button>
                 </div>
               </article>
@@ -217,12 +198,9 @@ export default function MovementLibrary({
         ) : (
           <div className="movement-library-empty">
             <strong>Hareket bulunamadı</strong>
-
             <p>
-              Arama kelimesini veya kategori
-              filtresini değiştir.
+              Arama kelimesini veya kategori filtresini değiştir.
             </p>
-
             <button
               type="button"
               onClick={() => {
