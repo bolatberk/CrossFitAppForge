@@ -1,0 +1,86 @@
+import type { TrainingWeek } from '../../types/training';
+
+const block1Week6: TrainingWeek = {
+  id: 'block-1-week-6',
+  block: 1,
+  week: 6,
+  title: 'Technical Transfer + Capacity Build',
+  description:
+    'Squat Catch kazanımlarını korurken Snatch bar path ve first-pull, Clean extension/turnover timing, Butterfly 12 tekrar bandı, Strict Pull-up tam ROM, running capacity ve Jerk/Competition Capacity gelişimi. Hedef haftalık RPE 7–8. Olympic teknik kalite yükten öncelikli. Failure yok. Accessory ve Day D opsiyonel. Sandbag yok.',
+  days: [
+    {
+      id: 'block-1-week-6-day-a',
+      day: 'DAY A',
+      title: 'Snatch Bar Path + Pull-Under',
+      duration: '80–90 dk',
+      focus: 'Squat Snatch · Bar Path · Pull-Under · Butterfly Capacity · Back Squat · Running',
+      purpose: 'Squat Catch kazanımını korurken barı vücuda daha yakın ve dikey taşımak, Butterfly kapasitesini 12 tekrar bandına çıkarmak ve running kapasitesini doğrudan ölçmek.',
+      sections: [
+        { id: 'w6-a-warm-up', title: 'Warm-up', duration: '10 dk', items: ['2 tur','200 m Row','10 Air Squat','8 Walking Lunge','10 Scap Push-up','10 PVC Pass Through','8 PVC Overhead Squat','Wrist / Overhead: 10 Wrist Rock','20 sn Prayer Stretch','20 sn Overhead Hold','Empty Bar: 5 Snatch Grip RDL','5 Muscle Snatch','5 Overhead Squat','5 High-Hang Squat Snatch'] },
+        { id: 'w6-a-olympic-drill', title: 'Olympic Drill', duration: '15 dk', items: ['Tall Snatch — 3×3 @ 30 kg','Snatch High Pull — 3×3 @ 40 kg','High-Hang Squat Snatch — 3×2 @ 40 kg','Dinlenme: 60–75 sn','Tall Snatch: Catch ve squat descent birbirine yaklaşacak.','Tall Snatch: Yüksekte frenleme yok.','Snatch High Pull: Bar vücuda yakın.','Snatch High Pull: Dirsekler yukarı/dışarı.','Snatch High Pull: Kalçayla barı öne vurma.','High-Hang: Direkt Squat Catch.'] },
+        { id: 'w6-a-olympic-lift', title: 'Olympic Lift — Squat Snatch', items: ['Squat Snatch — 6×2','Set 1–2: 45 kg','Set 3–4: 47.5 kg','Set 5–6: 50 kg','QUALITY GATE uygulanacak.','45 kg’da ≥3/4 temiz Squat Catch + kabul edilebilir bar path → 47.5 kg.','47.5 kg’da ≥3/4 temiz Squat Catch → 50 kg.','Aksi durumda ağırlık artırılmaz.','RPE: 6.5–7.5','Dinlenme: 2 dk','Ana metrik: Direct Squat Catch __/12','Ana metrik: Öne kaçan catch __/12','Ana metrik: Power Catch + OHS __/12','Hedef: ≥10/12 gerçek Squat Snatch.','Hedef: Power Catch + OHS ≤2/12.'] },
+        { id: 'w6-a-gymnastics', title: 'Gymnastics — Butterfly Capacity', items: ['Primer: 2×5 Hollow-to-Arch Kip Swing','Primer dinlenme: 30–45 sn','Ardından 4 set: 12 / 12 / 10 / 10 Butterfly Pull-up','Dinlenme: 90 sn','RPE: ≤8','12 sayısı uğruna teknik bozma.','Örnek: 12 / 11 / 10 / 9 temizse kabul.','Odak: Long legs.','Odak: Ayaklar birlikte.','Odak: Gereksiz knee bend yok.','Odak: Baş nötr.','Odak: Dairesel aks.','Odak: Push-away.'] },
+        { id: 'w6-a-strength', title: 'Strength — Back Squat', items: ['Back Squat — 4×4 @ 82.5 kg','≈ %75','Dinlenme: 2–2.5 dk','RPE: 7–8','Normal kontrollü eccentric.','Pause yok.','Grind yok.'] },
+        { id: 'w6-a-metcon', title: 'Metcon — Running Capacity', items: ['5 rounds','400 m Run','Dinlenme: 90 sn','Bu bir all-out test değil.','Hedef: 5 koşunun birbirine yakın olması.','Pacing R1: Kontrollü.','Pacing R2–R4: Aynı pace.','Pacing R5: Hızlanabiliyorsan hızlan.','Skor: R1 / R2 / R3 / R4 / R5 süreleri.','Ana metrik: En hızlı ve en yavaş 400 m arasındaki fark.','Hedef: ≤10–12 sn.','RPE: 7.5–8','Not: Week 5 Day A’da koşu limiter olduğu için bu hafta koşu doğrudan ölçülüyor.'] },
+        { id: 'w6-a-accessory', title: 'Accessory — Opsiyonel', items: ['2–3 tur','10 Single-Arm DB Row / kol @ 17.5–22.5 kg','12 Hollow Rock','20 sn Active Hang','12 Band External Rotation'] },
+        { id: 'w6-a-cool-down', title: 'Cool Down', items: ['5 dk Easy Walk','Calf Stretch','Hamstring Stretch','Hip Flexor Stretch','Lat Stretch'] },
+      ],
+    },
+    {
+      id: 'block-1-week-6-day-b',
+      day: 'DAY B',
+      title: 'Clean Technique + Strength',
+      duration: '80–90 dk',
+      focus: 'Squat Clean · Extension Timing · Strict Pull-up · Front Squat · DB/Row',
+      purpose: 'Squat Clean paternini korurken extension ve turnover zamanlamasını geliştirmek, early arm bend davranışını azaltmak ve tam ROM Strict Pull-up hacmini artırmak.',
+      sections: [
+        { id: 'w6-b-warm-up', title: 'Warm-up', duration: '10 dk', items: ['2 tur','250 m Row','8 Cossack Squat','8 Front Rack Lunge','10 Band Pull Apart','Empty Bar: 5 Clean Deadlift','5 Tall Clean','5 Front Squat','5 High-Hang Squat Clean'] },
+        { id: 'w6-b-olympic-drill', title: 'Olympic Drill', duration: '12–15 dk', items: ['Clean High Pull — 3×3 @ 50–55 kg','Tall Clean — 3×3 @ 40 kg','High-Hang Squat Clean — 2×2 @ 50 kg','Dinlenme: 60–75 sn','Clean High Pull: Long arms until extension.','Kollar extension tamamlanmadan kırılmayacak.','Tall Clean: Hızlı turnover.','Tall Clean: Aktif Squat Catch.','High-Hang: Power Catch + Front Squat yok.'] },
+        { id: 'w6-b-olympic-lift', title: 'Olympic Lift — Squat Clean', items: ['Squat Clean — 6×2','Set 1–2: 60 kg','Set 3–4: 65 kg','Set 5–6: 67.5 kg','QUALITY GATE: 60 kg temiz → 65 kg.','65 kg’da ≥3/4 kaliteli Direct Squat Catch → 67.5 kg.','RPE: ≤7.5','Dinlenme: 2 dk','Ana metrik: Direct Squat Clean __/12','Ana metrik: Early Arm Bend __/12','Ana metrik: Bar öne kaçma __/12','Hedef: ≥10/12 kaliteli Squat Clean.'] },
+        { id: 'w6-b-gymnastics', title: 'Gymnastics — Strict Pull-up', items: ['5 set: 5 / 5 / 4 / 4 / 3','Hedef: 21 tam ROM tekrar','Dinlenme: 90–120 sn','Standart: Dead Hang → Strict Pull → Çene bar üstü → Tam kontrollü iniş.','ROM bozulursa set biter.'] },
+        { id: 'w6-b-strength', title: 'Strength — Front Squat', items: ['Front Squat — 4×4 @ 77.5 kg','≈ %75','Dinlenme: 2–2.5 dk','RPE: ≤8','Son set: Son 2 tekrarda 2 sn dip pause.','Odak: Dirsek yüksek.','Odak: Göğüs dik.','Odak: Agresif çıkış.'] },
+        { id: 'w6-b-metcon', title: 'Metcon — Descending Ladder', items: ['For Time','15-12-9','DB Thruster @ 1×22.5 kg','Alternating DB Snatch @ 22.5 kg','Her round sonrası 12/10 Cal Row','Örnek Round 1: 15 DB Thruster + 15 DB Snatch + 12/10 Cal Row','Örnek Round 2: 12 DB Thruster + 12 DB Snatch + 12/10 Cal Row','Örnek Round 3: 9 DB Thruster + 9 DB Snatch + 12/10 Cal Row','Time Cap: 15 dk','RPE: 8–8.5','DB Thruster: Tek DB.','DB Thruster: Tekrarları iki kola mümkün olduğunca dengeli dağıt.','DB Snatch: Alternating.','Row: Recovery değil; sürdürülebilir güçlü pace.','Amaç: Squat-to-press fatigue · DB cycling · unilateral loading · descending rep management · row under local muscular fatigue.'] },
+        { id: 'w6-b-accessory', title: 'Accessory — Opsiyonel', items: ['2 tur','10 DB Bench Press / kol @ 17.5 kg','10 Bulgarian Split Squat / bacak','12 Ring Row'] },
+        { id: 'w6-b-cool-down', title: 'Cool Down', items: ['5 dk','Front Rack Stretch','Quad Stretch','Hip Stretch','Lat Stretch'] },
+      ],
+    },
+    {
+      id: 'block-1-week-6-day-c',
+      day: 'DAY C',
+      title: 'Competition Capacity / Jerk',
+      duration: '80–90 dk',
+      focus: 'Split Jerk · Butterfly Under Fatigue · Push Press · Competition Repeatability',
+      purpose: 'Jerk kalitesini korumak, Butterfly’ı yükselmiş solunum altında kullanmak ve competition repeatability kapasitesini geliştirmek.',
+      sections: [
+        { id: 'w6-c-note', title: 'Day C Notu', items: ['Bu gün ana programın parçasıdır.','Cumartesi aile programı nedeniyle yapılamazsa başarısızlık olarak yorumlanmayacak.','Block gerekirse uzatılacak.'] },
+        { id: 'w6-c-warm-up', title: 'Warm-up', duration: '10 dk', items: ['2 tur','200 m Ski','10 Walking Lunge','10 Scap Push-up','10 Band Pull Apart','Empty Bar: 6 Strict Press','6 Push Press','5 Push Jerk','5 Split Jerk'] },
+        { id: 'w6-c-olympic-drill', title: 'Olympic Drill — Jerk', items: ['Jerk Balance — 3×3 @ 40 kg','Tall Jerk — 3×2 @ 40 kg','Pause Split Jerk — 2×2 @ 45–50 kg','Pause Split Jerk: Catch pozisyonunda 2 sn pause.'] },
+        { id: 'w6-c-olympic-lift', title: 'Olympic Lift — Split Jerk', items: ['Split Jerk — 6×2','Set 1–2: 55 kg','Set 3–4: 60 kg','Set 5–6: 62.5 kg','RPE: 7–8','Dinlenme: 2 dk','QUALITY GATE: Bar öne kaçmıyor + split dengeli + lockout hızlı ise kilo artır.'] },
+        { id: 'w6-c-gymnastics', title: 'Gymnastics — Butterfly Under Fatigue', items: ['4 set','8 Burpee','Hemen ardından 8 Butterfly Pull-up','Dinlenme: 75–90 sn','Amaç: Butterfly’ı yükselmiş solunum altında kullanmak.','Butterfly kalitesi bozulursa 8 → 6.'] },
+        { id: 'w6-c-strength', title: 'Strength — Push Press', items: ['Push Press — 4×4 @ 50 kg','Dinlenme: 2 dk','RPE: ≤8','Önceki RPE 9 problemi nedeniyle yük kovalanmayacak.','Bar speed + pozisyon öncelikli.'] },
+        { id: 'w6-c-metcon', title: 'Metcon — Competition Interval', items: ['3 rounds','3 dk AMRAP:','10 Wall Ball @ 9 kg','8 Toes-to-Bar','6 Burpee Box Jump Over @ 24"','Ardından 2 dk Rest','Her 3 dk bölümünde Wall Ball’dan yeniden başla.','Toplam süre: 15 dk','Skor: Round 1 ___ tur + ___','Skor: Round 2 ___ tur + ___','Skor: Round 3 ___ tur + ___','Amaç: Competition repeatability.','Hedef: Roundlar arasındaki skor düşüşü ≤10%.','RPE: 8–8.5','Pacing R1: Kontrollü hızlı.','Pacing R2: R1’i eşle.','Pacing R3: Mümkünse R1’i geç.'] },
+        { id: 'w6-c-accessory', title: 'Accessory — Opsiyonel', items: ['2 tur','10 GHD Sit-up','10 Single-Arm DB Bench / kol @ 17.5 kg','12 Face Pull'] },
+        { id: 'w6-c-cool-down', title: 'Cool Down', items: ['5 dk Easy Walk / Bike','Shoulder Stretch','Lat Stretch','Hip Flexor Stretch','T-Spine'] },
+      ],
+    },
+    {
+      id: 'block-1-week-6-day-d',
+      day: 'DAY D',
+      title: 'Home Athletic Development',
+      duration: '45–60 dk',
+      focus: 'Double Under · Strict Pull-up · RDL · Structural Strength · Zone 2',
+      purpose: 'Opsiyonel ev günü. Double Under bağlantılarını geliştirmek, structural strength ve aerobic base kapasitesini desteklemek. A/B/C yorgunluğu yüksekse yapılmayacak.',
+      sections: [
+        { id: 'w6-d-warm-up', title: 'Warm-up', duration: '8 dk', items: ['8 dk easy movement'] },
+        { id: 'w6-d-skill', title: 'Double Under Skill', duration: '15 dk', items: ['İlk 5 dk: Single-Single-Double','İkinci 5 dk: DU bağlantı denemeleri','Son 5 dk: Kaliteli serbest deneme','Hedef: 5+ UB','5 UB gelirse 10 UB denemeleri başlayabilir.'] },
+        { id: 'w6-d-gymnastics', title: 'Strict Pull-up', items: ['Strict Pull-up — 4×3','Tam ROM','RPE: 6–7'] },
+        { id: 'w6-d-strength', title: 'Strength — Romanian Deadlift', items: ['Romanian Deadlift — 4×6 @ 80–85 kg','RPE: 7'] },
+        { id: 'w6-d-structural', title: 'Structural / Hypertrophy', items: ['3 tur','10 DB Bench Press / kol @ 17.5 kg','8 Single-Leg RDL / bacak @ 17.5 kg','10 Reverse Lunge / bacak @ 17.5 kg','12 GHD Hip Extension'] },
+        { id: 'w6-d-conditioning', title: 'Conditioning — Zone 2', duration: '15–20 dk', items: ['RPE: 4–5'] },
+        { id: 'w6-d-cool-down', title: 'Cool Down', duration: '5 dk', items: ['5 dk Cool Down'] },
+      ],
+    },
+  ],
+};
+
+export default block1Week6;
