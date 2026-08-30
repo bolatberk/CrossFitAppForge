@@ -4,6 +4,7 @@ import block1Week3 from './block1/week3';
 import block1Week4 from './block1/week4';
 import block1Week5 from './block1/week5';
 import block1Week6 from './block1/week6';
+import block1Week7 from './block1/week7';
 
 import type {
   TrainingBlock,
@@ -17,6 +18,7 @@ export const trainingProgram: TrainingWeek[] = [
   block1Week4,
   block1Week5,
   block1Week6,
+  block1Week7,
 ];
 
 export const trainingBlocks: TrainingBlock[] = [
