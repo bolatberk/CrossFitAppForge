@@ -11,6 +11,8 @@ type HomeDashboardProps = {
   nextDay: TrainingDay | null;
   onOpenDay: (day: TrainingDay) => void;
   onChangePage: (page: Page) => void;
+  averageRpe: number | null;
+  loggedResultCount: number;
 };
 
 function HomeDashboard({
@@ -20,6 +22,8 @@ function HomeDashboard({
   nextDay,
   onOpenDay,
   onChangePage,
+  averageRpe,
+  loggedResultCount,
 }: HomeDashboardProps) {
   const totalDayCount = activeWeek.days.length;
   const progressPercentage = totalDayCount
@@ -69,6 +73,10 @@ function HomeDashboard({
             <strong>
               {completedDayCount}/{totalDayCount} gün
             </strong>
+          </div>
+          <div className="v2-home-metrics">
+            <span><small>AVG RPE</small><strong>{averageRpe ? averageRpe.toFixed(1) : '—'}</strong></span>
+            <span><small>LOGS</small><strong>{loggedResultCount}</strong></span>
           </div>
         </div>
       </section>
@@ -192,8 +200,8 @@ function HomeDashboard({
           onClick={() => onChangePage('pr')}
         >
           <span className="v2-quick-icon">◆</span>
-          <strong>PR Tracking</strong>
-          <small>Kuvvet ve lift kayıtları</small>
+          <strong>Performance</strong>
+          <small>Log · RPE · conditioning · skill</small>
         </button>
       </section>
     </main>
