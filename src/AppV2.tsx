@@ -8,6 +8,7 @@ import ProgramTimeline from './components/v2/ProgramTimeline';
 import WorkoutDetailV2 from './components/v2/WorkoutDetailV2';
 import { useProgram } from './hooks/useProgram';
 import { useProgress } from './hooks/useProgress';
+import { useTrainingLog } from './hooks/useTrainingLog';
 import MovementLibrary from './pages/MovementLibrary';
 import Timer from './pages/Timer';
 import type { Page } from './types/navigation';
@@ -29,6 +30,13 @@ function AppV2() {
   } = useProgram(1);
 
   const trainingDays = activeWeek.days;
+
+  const {
+    allResults,
+    averageRpe,
+    saveResult,
+    getResult,
+  } = useTrainingLog();
 
   const {
     progress,
@@ -100,6 +108,8 @@ function AppV2() {
           nextDay={nextDay}
           onOpenDay={openDay}
           onChangePage={changePage}
+          averageRpe={averageRpe}
+          loggedResultCount={allResults.length}
         />
       )}
 
@@ -133,6 +143,8 @@ function AppV2() {
               )
             }
             onOpenNextDay={openDay}
+            getResult={getResult}
+            onSaveResult={saveResult}
           />
         )}
 
@@ -144,7 +156,7 @@ function AppV2() {
         <MovementLibrary onBack={goHome} />
       )}
 
-      {activePage === 'pr' && <PRTracking />}
+      {activePage === 'pr' && <PRTracking results={allResults} />}
 
       <BottomNavigation
         activePage={activePage}
