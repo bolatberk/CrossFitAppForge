@@ -5,24 +5,70 @@
 }
 
 .week-menu-block + .week-menu-block {
-  margin-top: 10px;
+  margin-top: 8px;
 }
 
 .week-menu-block-button {
+  appearance: none;
+  -webkit-appearance: none;
+
   width: 100%;
-  border: 0;
-  background: transparent;
-  color: var(--text-secondary, #9ca3af);
+  min-height: 34px;
+
+  margin: 0;
+  padding: 8px 10px;
+
+  border: none;
+  border-radius: 8px;
+
+  background: transparent !important;
+  box-shadow: none !important;
+
+  color: #8f98a3;
+
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 8px 10px;
+
+  font-family: inherit;
   font-size: 11px;
   font-weight: 800;
+  line-height: 1;
   letter-spacing: 0.08em;
+
+  text-align: left;
   cursor: pointer;
 }
 
+.week-menu-block-button:hover {
+  background: rgba(255, 255, 255, 0.04) !important;
+  color: #ffffff;
+}
+
 .week-menu-block-button.active {
-  color: var(--accent, #f5c518);
+  background: transparent !important;
+  color: #f5b82e;
+}
+
+.week-menu-block-button:focus,
+.week-menu-block-button:focus-visible {
+  outline: none;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.week-menu-block-button span {
+  margin: 0;
+  padding: 0;
+
+  border: none;
+  background: transparent !important;
+
+  color: inherit;
+  font: inherit;
+}
+
+.week-menu-block-button span:last-child {
+  font-size: 9px;
+  color: #f5b82e;
 }
