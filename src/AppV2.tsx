@@ -11,6 +11,7 @@ import { useProgress } from './hooks/useProgress';
 import { useTrainingLog } from './hooks/useTrainingLog';
 import MovementLibrary from './pages/MovementLibrary';
 import Timer from './pages/Timer';
+import { trainingBlocks } from './programs';
 import type { Page } from './types/navigation';
 import type { TrainingDay } from './types/training';
 
@@ -20,6 +21,7 @@ import './styles/ForgeV2.css';
 function AppV2() {
   const [activePage, setActivePage] =
     useState<Page>('home');
+
   const [selectedDayId, setSelectedDayId] =
     useState<string | null>(null);
 
@@ -27,7 +29,8 @@ function AppV2() {
     activeWeek,
     availableWeeks,
     selectWeek,
-  } = useProgram(1);
+    selectBlock,
+  } = useProgram(2);
 
   const trainingDays = activeWeek.days;
 
@@ -91,12 +94,20 @@ function AppV2() {
     setActivePage('home');
   }
 
+  function changeBlock(blockNumber: number) {
+    selectBlock(blockNumber);
+    setSelectedDayId(null);
+    setActivePage('home');
+  }
+
   return (
     <div className="app-shell forge-v2-shell">
       <Header
         activeWeek={activeWeek}
         availableWeeks={availableWeeks}
+        availableBlocks={trainingBlocks}
         onSelectWeek={changeWeek}
+        onSelectBlock={changeBlock}
         onGoHome={goHome}
       />
 
@@ -156,7 +167,9 @@ function AppV2() {
         <MovementLibrary onBack={goHome} />
       )}
 
-      {activePage === 'pr' && <PRTracking results={allResults} />}
+      {activePage === 'pr' && (
+        <PRTracking results={allResults} />
+      )}
 
       <BottomNavigation
         activePage={activePage}
