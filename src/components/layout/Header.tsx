@@ -4,19 +4,26 @@ import {
   useState,
 } from 'react';
 
-import type { TrainingWeek } from '../../types/training';
+import type {
+  TrainingBlock,
+  TrainingWeek,
+} from '../../types/training';
 
 type HeaderProps = {
   activeWeek: TrainingWeek;
   availableWeeks: TrainingWeek[];
+  availableBlocks: TrainingBlock[];
   onSelectWeek: (weekNumber: number) => void;
+  onSelectBlock: (blockNumber: number) => void;
   onGoHome: () => void;
 };
 
 function Header({
   activeWeek,
   availableWeeks,
+  availableBlocks,
   onSelectWeek,
+  onSelectBlock,
   onGoHome,
 }: HeaderProps) {
   const [isWeekMenuOpen, setIsWeekMenuOpen] =
@@ -27,7 +34,9 @@ function Header({
   );
 
   useEffect(() => {
-    function handlePointerDown(event: PointerEvent) {
+    function handlePointerDown(
+      event: PointerEvent
+    ) {
       if (
         menuRef.current &&
         !menuRef.current.contains(
@@ -38,7 +47,9 @@ function Header({
       }
     }
 
-    function handleKeyDown(event: KeyboardEvent) {
+    function handleKeyDown(
+      event: KeyboardEvent
+    ) {
       if (event.key === 'Escape') {
         setIsWeekMenuOpen(false);
       }
@@ -48,6 +59,7 @@ function Header({
       'pointerdown',
       handlePointerDown
     );
+
     document.addEventListener(
       'keydown',
       handleKeyDown
@@ -58,6 +70,7 @@ function Header({
         'pointerdown',
         handlePointerDown
       );
+
       document.removeEventListener(
         'keydown',
         handleKeyDown
@@ -65,8 +78,17 @@ function Header({
     };
   }, []);
 
-  function selectWeek(weekNumber: number) {
+  function selectWeek(
+    weekNumber: number
+  ) {
     onSelectWeek(weekNumber);
+    setIsWeekMenuOpen(false);
+  }
+
+  function selectBlock(
+    blockNumber: number
+  ) {
+    onSelectBlock(blockNumber);
     setIsWeekMenuOpen(false);
   }
 
@@ -86,7 +108,10 @@ function Header({
         <div className="brand-logo">F</div>
 
         <div>
-          <span className="brand-mark">FORGE</span>
+          <span className="brand-mark">
+            FORGE
+          </span>
+
           <p>Performance Training</p>
         </div>
       </button>
@@ -108,18 +133,24 @@ function Header({
           }
           aria-haspopup="menu"
           aria-expanded={isWeekMenuOpen}
-          aria-label={`Block ${activeWeek.block}, Week ${activeWeek.week}. Hafta seçimini aç`}
+          aria-label={`Block ${activeWeek.block}, Week ${activeWeek.week}. Program seçimini aç`}
         >
-          <span>Block {activeWeek.block}</span>
+          <span>
+            Block {activeWeek.block}
+          </span>
 
           <div className="week-chip-bottom">
-            <strong>W{activeWeek.week}</strong>
+            <strong>
+              W{activeWeek.week}
+            </strong>
 
             <span
               className="week-chip-chevron"
               aria-hidden="true"
             >
-              {isWeekMenuOpen ? '⌃' : '⌄'}
+              {isWeekMenuOpen
+                ? '⌃'
+                : '⌄'}
             </span>
           </div>
         </button>
@@ -128,49 +159,101 @@ function Header({
           <div
             className="week-menu"
             role="menu"
-            aria-label="Hafta seçimi"
+            aria-label="Block ve hafta seçimi"
           >
             <span className="week-menu-title">
-              HAFTA SEÇİMİ
+              PROGRAM SEÇİMİ
             </span>
 
-            <div className="week-menu-list">
-              {availableWeeks.map(week => {
-                const isActive =
-                  week.week === activeWeek.week;
+            {availableBlocks.map(block => {
+              const isActiveBlock =
+                block.block ===
+                activeWeek.block;
 
-                return (
+              return (
+                <div
+                  key={block.id}
+                  className="week-menu-block"
+                >
                   <button
                     type="button"
-                    role="menuitemradio"
-                    aria-checked={isActive}
                     className={[
-                      'week-menu-item',
-                      isActive ? 'active' : '',
+                      'week-menu-block-button',
+                      isActiveBlock
+                        ? 'active'
+                        : '',
                     ].join(' ')}
-                    key={week.id}
                     onClick={() =>
-                      selectWeek(week.week)
+                      selectBlock(
+                        block.block
+                      )
                     }
                   >
-                    <span className="week-menu-code">
-                      W{week.week}
+                    <span>
+                      BLOCK {block.block}
                     </span>
 
-                    <span className="week-menu-name">
-                      Week {week.week}
-                    </span>
-
-                    <span
-                      className="week-menu-radio"
-                      aria-hidden="true"
-                    >
-                      {isActive ? '●' : '○'}
+                    <span>
+                      {isActiveBlock
+                        ? '●'
+                        : '○'}
                     </span>
                   </button>
-                );
-              })}
-            </div>
+
+                  {isActiveBlock && (
+                    <div className="week-menu-list">
+                      {availableWeeks.map(
+                        week => {
+                          const isActive =
+                            week.week ===
+                            activeWeek.week;
+
+                          return (
+                            <button
+                              type="button"
+                              role="menuitemradio"
+                              aria-checked={
+                                isActive
+                              }
+                              className={[
+                                'week-menu-item',
+                                isActive
+                                  ? 'active'
+                                  : '',
+                              ].join(' ')}
+                              key={week.id}
+                              onClick={() =>
+                                selectWeek(
+                                  week.week
+                                )
+                              }
+                            >
+                              <span className="week-menu-code">
+                                W{week.week}
+                              </span>
+
+                              <span className="week-menu-name">
+                                Week{' '}
+                                {week.week}
+                              </span>
+
+                              <span
+                                className="week-menu-radio"
+                                aria-hidden="true"
+                              >
+                                {isActive
+                                  ? '●'
+                                  : '○'}
+                              </span>
+                            </button>
+                          );
+                        }
+                      )}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
 
             <div className="week-menu-divider" />
 
@@ -179,7 +262,10 @@ function Header({
               className="week-menu-home"
               onClick={goHome}
             >
-              <span aria-hidden="true">⌂</span>
+              <span aria-hidden="true">
+                ⌂
+              </span>
+
               <span>Ana Sayfa</span>
             </button>
           </div>
