@@ -219,79 +219,105 @@ const block2Week3: TrainingWeek = {
     {
       "id": "block-2-week-3-day-c",
       "day": "DAY C",
-      "title": "Jerk Footwork / Lower-Body Conditioning",
-      "duration": "75–90 min",
-      "focus": "Jerk Footwork · Core · Lower Body",
-      "purpose": "No loaded jerk; lower-body conditioning and pain-free movement.",
+      "title": "Competition Conditioning + Strength Maintenance",
+      "duration": "80–90 min",
+      "focus": "Jerk Technique · Core · Strength Maintenance · Mixed-Modal Conditioning",
+      "purpose": "Controlled intensity, quality movement and recovery for Week 4. No failure/PR; stop painful movements.",
       "sections": [
         {
           "id": "b2w3-c-warm",
           "title": "Warm-up",
           "items": [
             "2 ROUNDS:",
-            "200 m BikeErg",
+            "200 m SkiErg (if shoulder pain-free; otherwise BikeErg)",
             "10 Air Squat",
             "8 Walking Lunge",
             "10 Glute Bridge",
-            "8 Dead Bug per side"
+            "8 Scapular Retraction",
+            "6 Empty Bar Good Morning"
           ],
-          "duration": "8 min"
+          "duration": "10 min"
         },
         {
           "id": "b2w3-c-jerk",
-          "title": "Jerk Technique — NO LOADED JERK",
+          "title": "Olympic Technique — Unloaded Jerk Footwork",
           "items": [
-            "Unloaded Split Jerk Footwork 4×3",
-            "Split Stance Balance Hold 3×15 sec per side",
-            "Front-Rack Footwork Drill 2×3 only if pain-free",
+            "Split Jerk Footwork 4×3 (unloaded)",
+            "Split Stance Balance 3×20 sec per side",
+            "Dip + Drive 3×5 with PVC, only if pain-free",
+            "Focus: vertical dip/drive, balanced foot placement, stable split stance, controlled recovery.",
             "NO loaded Split Jerk this week."
           ],
           "duration": "10 min"
         },
         {
           "id": "b2w3-c-core",
-          "title": "Core / Gymnastics Alternative",
+          "title": "Gymnastics + Core — Not For Time",
           "items": [
-            "Dead Bug 3×10 per side",
-            "Side Plank 2×30 sec per side, only if pain-free",
-            "No Explosive High Pull-Up or Butterfly on Day C."
+            "3 ROUNDS:",
+            "10 GHD Sit-Up",
+            "12 Hanging Knee Raise (only if pain-free)",
+            "30 sec Hollow Hold",
+            "If hanging bothers shoulder: replace with 10 Dead Bug per side.",
+            "Rest 45–60 sec between rounds."
           ],
-          "duration": "8 min"
+          "duration": "12 min"
         },
         {
           "id": "b2w3-c-strength",
-          "title": "Strength — Lower Body",
+          "title": "Strength — Front Squat + Single-Leg RDL",
           "items": [
-            "Bulgarian Split Squat 3×8 per leg, BW, RPE 7",
-            "If rear ankle discomfort: Reverse Lunge 3×8 per leg",
-            "Tempo Goblet Squat 3×8 @20–24 kg, 3-sec eccentric",
-            "Skip Goblet Squat if clavicle/shoulder holding position is uncomfortable."
+            "A. Tempo Front Squat 4×4 @65 kg",
+            "3-sec eccentric, no pause at bottom, normal ascent; RPE 6–7; rest 90–120 sec.",
+            "Only if front-rack contact is pain-free. If painful, skip and use pain-free lower-body alternative.",
+            "B. Single-Leg DB Romanian Deadlift 3×8 per leg @12.5 kg",
+            "ONE 12.5 kg dumbbell in the hand opposite the working leg; controlled eccentric; hip/hamstring focus; RPE 7; rest 45–60 sec.",
+            "Single-Leg RDL may be skipped if leg fatigue is significant."
           ],
-          "duration": "15 min"
+          "duration": "18 min"
         },
         {
           "id": "b2w3-c-metcon",
-          "title": "Metcon — For Time / TC 16 min",
+          "title": "Metcon — For Time / 4 Rounds / TC 16",
           "items": [
+            "STANDARD (only when appropriate to resume loading and fully pain-free):",
             "4 ROUNDS:",
-            "15/12 Cal BikeErg",
+            "15 Wall Ball @9 kg",
+            "12 Alternating DB Hang Clean @17.5 kg (ONE dumbbell, 6/6)",
+            "10 Box Jump Over @24 inch",
+            "12/10 Cal SkiErg",
+            "PACING: Round 1 controlled; Round 2 hold rhythm; Round 3 reduce transitions; Round 4 accelerate without losing technique.",
+            "Wall Ball and SkiErg load the shoulder. Do not use as a return-to-loading test; sports medicine assessment first.",
+            "ALTERNATIVE — 4 ROUNDS / TC 16:",
             "15 Air Squat",
-            "12 Box Step Over 24 inch",
-            "10 Alternating Reverse Lunge per leg"
-          ]
-        },
-        {
-          "id": "b2w3-c-hyper",
-          "title": "Hypertrophy",
-          "items": [
-            "None on Day C."
-          ]
+            "12 Alternating DB Hang Clean @17.5 kg (only if pain-free)",
+            "10 Box Jump Over @24 inch",
+            "12/10 Cal BikeErg",
+            "If DB Hang Clean causes discomfort, replace with 12 controlled Step-Up.",
+            "Stop any provoking movement immediately; do not train through clavicle/shoulder pain."
+          ],
+          "duration": "16 min"
         },
         {
           "id": "b2w3-c-cool",
           "title": "Cooldown",
           "items": [
-            "3–5 min"
+            "2 min easy walking",
+            "1 min controlled breathing",
+            "Gentle hip and quadriceps stretches"
+          ],
+          "duration": "5 min"
+        },
+        {
+          "id": "b2w3-c-report",
+          "title": "Post-Workout Report",
+          "items": [
+            "OLYMPIC: Footwork ___ / Dip-Drive ___ / Shoulder status ___",
+            "GYMNASTICS + CORE: Completed? ___ / Limiting movement ___",
+            "STRENGTH: Front Squat 4×4 @65 kg ___ / RPE ___ / Single-Leg RDL 3×8 @12.5 kg ___",
+            "METCON: Version ___ / Time ___ / Hardest movement ___ / Pacing ___",
+            "SESSION: Total duration ___ / Shoulder-clavicle symptoms ___ / General fatigue (1–10) ___",
+            "GOAL: Quality movement + controlled intensity + recovery for Week 4."
           ]
         }
       ]
